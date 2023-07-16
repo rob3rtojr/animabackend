@@ -18,9 +18,9 @@ import { resposta } from './routes/resposta'
 const app = fastify()
 
 app.register(cors, {
-  origin: true,
+  //origin: true,
   //EM PRODUÇÃO, ALTERAR PARA:
-  //origin : ['http://localhost:3333','https://endereço do front end']
+  origin : ['https://animabackend.azurewebsites.net/']
 })
 
 app.register(jwt, {
