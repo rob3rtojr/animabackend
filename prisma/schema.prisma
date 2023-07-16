@@ -1,0 +1,167 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "sqlserver"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+// criar uma migration: yarn prisma migrate dev
+model Estado {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  sigla     String    @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+
+  Regional         Regional[]
+  FormularioEstado FormularioEstado[]
+}
+
+model Regional {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+
+  estado Estado @relation(fields: [estadoId], references: [id])
+
+  estadoId  Int
+  Municipio Municipio[]
+}
+
+model Municipio {
+  id         Int       @id @default(autoincrement())
+  nome       String
+  codigoIBGE String    @unique
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @default(now())
+
+  regional Regional @relation(fields: [regionalId], references: [id])
+
+  regionalId Int
+  Escola     Escola[]
+  Professor  Professor[]
+}
+
+model Escola {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  codigoMec String    @unique
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+
+  municipio   Municipio @relation(fields: [municipioId], references: [id])
+  municipioId Int
+  Turma       Turma[]
+}
+
+model Turma {
+  id        Int       @id @default(autoincrement())
+  nome      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
+
+  escola   Escola  @relation(fields: [escolaId], references: [id])
+  escolaId Int
+  Aluno    Aluno[]
+}
+
+model Aluno {
+  id             Int    @id @default(autoincrement())
+  nome           String
+  dataNascimento String
+  matricula      String
+  nomeMae        String
+
+  turma         Turma           @relation(fields: [turmaId], references: [id])
+  turmaId       Int
+  RespostaAluno RespostaAluno[]
+}
+
+model Professor {
+  id             Int    @id @default(autoincrement())
+  nome           String
+  dataNascimento String
+  cpf            String @unique
+
+  municipio   Municipio @relation(fields: [municipioId], references: [id])
+  municipioId Int
+}
+
+model Formulario {
+  id               Int                @id @default(autoincrement())
+  nome             String
+  tipo             String
+  FormularioEstado FormularioEstado[]
+  Pergunta         Pergunta[]
+}
+
+model FormularioEstado {
+  id Int @id @default(autoincrement())
+
+  estado   Estado @relation(fields: [estadoId], references: [id])
+  estadoId Int
+
+  formulario   Formulario @relation(fields: [formularioId], references: [id])
+  formularioId Int
+}
+
+model TipoPergunta {
+  id        Int        @id @default(autoincrement())
+  descricao String
+  Pergunta  Pergunta[]
+}
+
+model Pergunta {
+  id             Int             @id @default(autoincrement())
+  descricao      String
+  numero         String
+  ordem          Int
+  tipoPergunta   TipoPergunta    @relation(fields: [tipoPerguntaId], references: [id])
+  tipoPerguntaId Int
+  timer          Int?
+  formulario     Formulario      @relation(fields: [formularioId], references: [id])
+  formularioId   Int
+  respostaAluno  RespostaAluno[]
+  alternativa    Alternativa[]
+  escutar        Escutar[]
+}
+
+model Escutar {
+  id Int @id @default(autoincrement())
+
+  pergunta Pergunta @relation(fields: [perguntaId], references: [id])
+
+  escutarPerguntaId    Int
+  escutarAlternativaId Int
+  perguntaId           Int
+
+  @@unique([escutarPerguntaId, escutarAlternativaId])
+}
+
+model Alternativa {
+  id         Int      @id @default(autoincrement())
+  descricao  String
+  numero     String
+  ordem      Int
+  pergunta   Pergunta @relation(fields: [perguntaId], references: [id])
+  perguntaId Int
+}
+
+model RespostaAluno {
+  descricao  String
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @default(now())
+  pergunta   Pergunta  @relation(fields: [perguntaId], references: [id])
+  perguntaId Int
+  aluno      Aluno     @relation(fields: [alunoId], references: [id])
+  alunoId    Int
+
+  @@id([perguntaId, alunoId])
+}
