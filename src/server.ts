@@ -14,6 +14,7 @@ import { authRotes } from './routes/auth'
 import { formulario } from './routes/formulario'
 import { professorRoutes } from './routes/professor'
 import { resposta } from './routes/resposta'
+import { apiRoutes } from './routes/api'
 
 const app = fastify()
 
@@ -27,6 +28,7 @@ app.register(jwt, {
   secret: 'UIUWPOEIRUNWPOIERIijkjgçiwrutnbçlerutvnweiru @!'
 })
 
+app.register(apiRoutes)
 app.register(authRotes)
 app.register(estadoRoutes)
 app.register(regionalRoutes)
