@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma'
+import { prisma } from '../lib/prisma.js'
 
 export async function formulario(app: FastifyInstance) {
   app.get('/formulario/:id', async (request) => {
