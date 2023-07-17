@@ -17,9 +17,9 @@ import { apiRoutes } from './routes/api.js'
 const app = fastify()
 
 app.register(cors, {
-  // origin: true,
+   origin: true,
   // EM PRODUÇÃO, ALTERAR PARA:
-  origin: ['https://animabackend.azurewebsites.net/'],
+  //origin: ['https://animabackend.azurewebsites.net/'],
 })
 
 app.register(jwt, {
@@ -41,8 +41,8 @@ app.register(resposta)
 
 app
   .listen({
-    port: 8080,
+    port: 3333,
   })
   .then(() => {
-    console.log('Server running on http://localhost:8080 👍')
+    console.log('Server running on http://localhost:3333 👍')
   })
