@@ -1,110 +1,103 @@
-import { FastifyInstance } from "fastify";
-import { z } from 'zod';
-import { prisma } from "../lib/prisma";
+import { FastifyInstance } from 'fastify'
+import { z } from 'zod'
+import { prisma } from '../lib/prisma'
 
 export async function resposta(app: FastifyInstance) {
+  app.post('/resposta:', async (request) => {
+    await request.jwtVerify()
 
-    app.post('/resposta:', async (request) => {
-
-        await request.jwtVerify()
-
-        const bodySchema = z.object({
-
-            perguntaId: z.coerce.number(),
-            pessoaId: z.coerce.number(),
-            resposta: z.string(),
-            tipo: z.string(),
-            acao: z.string().length(1)
-
-        })
-
-        const { perguntaId, pessoaId, resposta, tipo, acao } = bodySchema.parse(request.body)
-
-        let respostaAluno
-        let respostaProfessor
-
-        if (tipo === "aluno") {
-
-            if (acao === "I") {
-                respostaAluno = prisma.respostaAluno.create({
-                    data: {
-                        alunoId: pessoaId,
-                        perguntaId,
-                        descricao: resposta
-                    }
-                })
-            }
-            else if (acao === "A") {
-                {
-                    respostaAluno = await prisma.respostaAluno.update({
-                        where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
-                        data: { descricao: resposta }
-                    })
-                }
-            }
-            else if (acao === "D") {
-                await prisma.respostaAluno.delete({ where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } } })
-                respostaAluno = []
-            }
-
-
-        } else if (tipo === "professor") {
-
-        }
-
-        const resp = (tipo === "aluno" ? respostaAluno : respostaProfessor)
-
-        return resp
+    const bodySchema = z.object({
+      perguntaId: z.coerce.number(),
+      pessoaId: z.coerce.number(),
+      resposta: z.string(),
+      tipo: z.string(),
+      acao: z.string().length(1),
     })
 
-    // app.put('/resposta', async (request) => {
+    const { perguntaId, pessoaId, resposta, tipo, acao } = bodySchema.parse(
+      request.body,
+    )
 
-    //     const bodySchema = z.object({
-    //         perguntaId: z.coerce.number(),
-    //         pessoaId: z.coerce.number(),
-    //         resposta: z.string(),
-    //         tipo: z.string()
-    //     })
+    let respostaAluno
+    let respostaProfessor
 
-    //     let respostaAluno
-    //     let respostaProfessor
+    if (tipo === 'aluno') {
+      if (acao === 'I') {
+        respostaAluno = await prisma.respostaAluno.create({
+          data: {
+            alunoId: pessoaId,
+            perguntaId,
+            descricao: resposta,
+          },
+        })
+      } else if (acao === 'A') {
+        {
+          respostaAluno = await prisma.respostaAluno.update({
+            where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
+            data: { descricao: resposta },
+          })
+        }
+      } else if (acao === 'D') {
+        await prisma.respostaAluno.delete({
+          where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
+        })
+        respostaAluno = []
+      }
+    } else if (tipo === 'professor') {
+    }
 
-    //     const { perguntaId, pessoaId, resposta, tipo } = bodySchema.parse(request.body)
+    const resp = tipo === 'aluno' ? respostaAluno : respostaProfessor
 
-    //     if (tipo === "aluno") {
-    //         respostaAluno = await prisma.respostaAluno.update({
-    //             where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
-    //             data: { descricao: resposta }
-    //         })
-    //     }
-    //     else {
-    //         console.log("professor")
-    //     }
+    return resp
+  })
 
-    //     return respostaAluno
-    // })
+  // app.put('/resposta', async (request) => {
 
-    // app.delete('/resposta', async (request) => {
+  //     const bodySchema = z.object({
+  //         perguntaId: z.coerce.number(),
+  //         pessoaId: z.coerce.number(),
+  //         resposta: z.string(),
+  //         tipo: z.string()
+  //     })
 
-    //     const bodySchema = z.object({
-    //         perguntaId: z.coerce.number(),
-    //         pessoaId: z.coerce.number(),
-    //         tipo: z.string()
-    //     })
+  //     let respostaAluno
+  //     let respostaProfessor
 
-    //     let respostaAluno
-    //     let respostaProfessor
+  //     const { perguntaId, pessoaId, resposta, tipo } = bodySchema.parse(request.body)
 
-    //     const { perguntaId, pessoaId, tipo } = bodySchema.parse(request.body)
+  //     if (tipo === "aluno") {
+  //         respostaAluno = await prisma.respostaAluno.update({
+  //             where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
+  //             data: { descricao: resposta }
+  //         })
+  //     }
+  //     else {
+  //         console.log("professor")
+  //     }
 
-    //     if (tipo === "aluno") {
-    //         respostaAluno = await prisma.respostaAluno.delete({ where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } } })
-    //     }
-    //     else {
+  //     return respostaAluno
+  // })
 
-    //     }
+  // app.delete('/resposta', async (request) => {
 
-    //     return respostaAluno
-    // })
+  //     const bodySchema = z.object({
+  //         perguntaId: z.coerce.number(),
+  //         pessoaId: z.coerce.number(),
+  //         tipo: z.string()
+  //     })
 
+  //     let respostaAluno
+  //     let respostaProfessor
+
+  //     const { perguntaId, pessoaId, tipo } = bodySchema.parse(request.body)
+
+  //     if (tipo === "aluno") {
+  //         respostaAluno = await prisma.respostaAluno.delete({ where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } } })
+  //     }
+  //     else {
+
+  //     }
+
+  //     return respostaAluno
+  // })
 }

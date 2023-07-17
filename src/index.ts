@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import fastify from 'fastify'
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
@@ -19,13 +17,13 @@ import { apiRoutes } from './routes/api'
 const app = fastify()
 
 app.register(cors, {
-  //origin: true,
-  //EM PRODUÇÃO, ALTERAR PARA:
-  origin : ['https://animabackend.azurewebsites.net/']
+  // origin: true,
+  // EM PRODUÇÃO, ALTERAR PARA:
+  origin: ['https://animabackend.azurewebsites.net/'],
 })
 
 app.register(jwt, {
-  secret: 'UIUWPOEIRUNWPOIERIijkjgçiwrutnbçlerutvnweiru @!'
+  secret: 'UIUWPOEIRUNWPOIERIijkjgçiwrutnbçlerutvnweiru @!',
 })
 
 app.register(apiRoutes)
@@ -41,11 +39,10 @@ app.register(alunoRoutes)
 app.register(formulario)
 app.register(resposta)
 
-
 app
   .listen({
-    port: 80,
+    port: 8080,
   })
   .then(() => {
-    console.log('Server running on http://localhost:80 👍')
+    console.log('Server running on http://localhost:8080 👍')
   })
