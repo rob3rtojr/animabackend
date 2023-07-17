@@ -39,10 +39,13 @@ app.register(alunoRoutes)
 app.register(formulario)
 app.register(resposta)
 
+const port = process.env.PORT || 3333;
+
+
 app
   .listen({
-    port: 3333,
+    port: Number(port),
   })
   .then(() => {
-    console.log('Server running on http://localhost:3333 👍')
+    console.log(`Server running on http://localhost:${port} 👍`)
   })
