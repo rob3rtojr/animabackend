@@ -44,8 +44,8 @@ app.register(resposta)
 
 app
   .listen({
-    port: 8080,
+    port: 80,
   })
   .then(() => {
-    console.log('Server running on http://localhost:8080 👍')
+    console.log('Server running on http://localhost:80 👍')
   })
