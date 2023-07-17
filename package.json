@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "src/index.ts",
+  "main": "ts-node-esm src/index.ts",
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "lint": "eslint src --ext .ts --fix"
