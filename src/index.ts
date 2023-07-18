@@ -19,7 +19,7 @@ const app = fastify()
 app.register(cors, {
    //origin: true,
   // EM PRODUCAO, ALTERAR PARA:
-  origin: ['https://animabackend.azurewebsites.net/','https://anima-backend-1a609a85dd19.herokuapp.com/'],
+  origin: ['https://animabackend.azurewebsites.net/'],
 })
 
 app.register(jwt, {
