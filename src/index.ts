@@ -47,5 +47,5 @@ app
     port: Number(port),
   })
   .then(() => {
-    console.log(`Server running on http://localhost:${port} 👍`)
+    console.log(`---> Server running on http://localhost:${port} 👍👍`)
   })
