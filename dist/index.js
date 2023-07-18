@@ -15,7 +15,7 @@ import { apiRoutes } from './routes/api.js';
 const app = fastify();
 app.register(cors, {
     //origin: true,
-    // EM PRODUÇÃO, ALTERAR PARA:
+    // EM PRODUCAO, ALTERAR PARA:
     origin: ['https://animabackend.azurewebsites.net/'],
 });
 app.register(jwt, {
@@ -32,14 +32,13 @@ app.register(turmaRoutes);
 app.register(alunoRoutes);
 app.register(formulario);
 app.register(resposta);
-
-const port = process.env.PORT || 3333
-
+const port = process.env.PORT || 3333;
 app
     .listen({
-    port,
+    port: Number(port),
+    host: '0.0.0.0'
 })
     .then(() => {
-    console.log(`Server running on http://localhost:${port} 👍`);
+    console.log(`---> RS Server running on port:${port}`);
 });
 //# sourceMappingURL=index.js.map

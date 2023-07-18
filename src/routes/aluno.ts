@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
-import { prisma } from '../lib/prisma.js'
+import { prisma } from '../lib/prisma'
 
 export async function alunoRoutes(app: FastifyInstance) {
   app.get('/alunos/:turmaId', async (request) => {
