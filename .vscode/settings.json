@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/d856d913-f903-4477-971a-ea4adcb4b078/resourceGroups/anima/providers/Microsoft.Web/sites/animabackend",
+    "appService.deploySubpath": "."
+}

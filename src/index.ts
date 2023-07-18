@@ -43,7 +43,8 @@ const port = process.env.PORT || 3333;
 app
   .listen({
     port: Number(port),
+    host: '0.0.0.0'
   })
   .then(() => {
-    console.log(`---> Server running on port:${port}`)
+    console.log(`---> RS Server running on port:${port}`)
   })
