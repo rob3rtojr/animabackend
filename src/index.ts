@@ -19,7 +19,7 @@ const app = fastify()
 app.register(cors, {
    //origin: true,
   // EM PRODUCAO, ALTERAR PARA:
-  origin: ['https://animabackend.azurewebsites.net/'],
+  origin: ['https://animabackend.azurewebsites.net/','https://anima-backend-1a609a85dd19.herokuapp.com/'],
 })
 
 app.register(jwt, {
@@ -35,12 +35,10 @@ app.register(professorRoutes)
 app.register(escolaRoutes)
 app.register(turmaRoutes)
 app.register(alunoRoutes)
-
 app.register(formulario)
 app.register(resposta)
 
 const port = process.env.PORT || 3333;
-
 
 app
   .listen({
