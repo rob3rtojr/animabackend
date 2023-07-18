@@ -18,7 +18,7 @@ const app = fastify()
 
 app.register(cors, {
    //origin: true,
-  // EM PRODUÇÃO, ALTERAR PARA:
+  // EM PRODUCAO, ALTERAR PARA:
   origin: ['https://animabackend.azurewebsites.net/'],
 })
 
@@ -47,5 +47,5 @@ app
     port: Number(port),
   })
   .then(() => {
-    console.log(`---> Server running on http://localhost:${port} 👍👍`)
+    console.log(`---> Server running on port:${port}`)
   })
