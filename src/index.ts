@@ -26,6 +26,7 @@ app.register(jwt, {
   secret: 'UIUWPOEIRUNWPOIERIijkjgçiwrutnbçlerutvnweiru @!',
 })
 
+
 app.register(apiRoutes)
 app.register(authRotes)
 app.register(estadoRoutes)
