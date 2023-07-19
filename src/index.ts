@@ -17,9 +17,9 @@ import { apiRoutes } from './routes/api'
 const app = fastify()
 
 app.register(cors, {
-   //origin: true,
+  origin: true,
   // EM PRODUCAO, ALTERAR PARA:
-  origin: ['https://animabackend.azurewebsites.net/'],
+  //origin: ['https://animabackend.azurewebsites.net/','http://localhost:3000'],
 })
 
 app.register(jwt, {
