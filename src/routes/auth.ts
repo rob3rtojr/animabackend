@@ -5,6 +5,9 @@ import { afterEach } from 'node:test'
 
 function replaceSpecialChars(str: string | undefined)
 {
+    if (str===undefined)
+      return ""
+
     str = str.replace(/[ÀÁÂÃÄÅ]/,"A");
     str = str.replace(/[àáâãäå]/,"a");
     str = str.replace(/[ÈÉÊË]/,"E");
@@ -14,6 +17,24 @@ function replaceSpecialChars(str: string | undefined)
     // o resto
     return str.replace(/[^a-z0-9]/gi,''); 
 }
+
+function getPrimeiroNome(nomeCompleto: string|undefined): string {
+
+  if (nomeCompleto===undefined)
+    return ""
+
+  // Remova possíveis espaços em excesso antes e depois do nome
+  const nomeSemEspacos = nomeCompleto.trim();
+
+  // Divida o nome completo usando espaços como separadores
+  const partesDoNome = nomeSemEspacos.split(" ");
+
+  // O primeiro nome será o primeiro elemento do array resultante
+  const primeiroNome = partesDoNome[0];
+
+  return primeiroNome;
+}
+
 
 export async function authRotes(app: FastifyInstance) {
   app.post('/autenticacao', async (request, reply) => {
@@ -85,7 +106,7 @@ export async function authRotes(app: FastifyInstance) {
         }
       }
       if (nomeMae !== '') {
-        if (replaceSpecialChars(userAluno?.nomeMae.toUpperCase()) === replaceSpecialChars(nomeMae.toUpperCase())) {
+        if (replaceSpecialChars(getPrimeiroNome(userAluno?.nomeMae.toUpperCase())) === replaceSpecialChars(nomeMae.toUpperCase())) {
           userExists = true
         }
       }
