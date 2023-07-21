@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { afterEach } from 'node:test'
 
 export async function authRotes(app: FastifyInstance) {
   app.post('/autenticacao', async (request, reply) => {
@@ -136,20 +137,47 @@ export async function authRotes(app: FastifyInstance) {
     }
 
     if (userExists) {
-      const formularios = await prisma.formulario.findMany({
-        where: {
-          tipo: userType,
-          FormularioEstado: {
-            some: {
-              estadoId,
-            },
+
+      let formularios
+
+      if (userType==="aluno") {
+
+        formularios = await prisma.formularioAluno.findMany({
+          where: {
+            alunoId: userId          
           },
-        },
-        select: {
-          id: true,
-          nome: true,
-        },
-      })
+          select: {
+            alunoId:true,
+            situacao: true,
+            formulario: {
+              select: {
+                id: true,
+                nome: true,
+                tipo:true
+              }
+            }
+          }
+        })
+
+      }
+      else {
+        formularios = await prisma.formularioProfessor.findMany({
+          where: {
+            professorId: userId          
+          },
+          select: {
+            professorId:true,
+            situacao: true,
+            formulario: {
+              select: {
+                id: true,
+                nome: true,
+                tipo: true
+              }
+            }
+          }
+        })        
+      }
 
       const token = app.jwt.sign(
         {
