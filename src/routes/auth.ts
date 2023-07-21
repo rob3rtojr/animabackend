@@ -3,6 +3,18 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 import { afterEach } from 'node:test'
 
+function replaceSpecialChars(str: string | undefined)
+{
+    str = str.replace(/[ÀÁÂÃÄÅ]/,"A");
+    str = str.replace(/[àáâãäå]/,"a");
+    str = str.replace(/[ÈÉÊË]/,"E");
+    str = str.replace(/[Ç]/,"C");
+    str = str.replace(/[ç]/,"c");
+
+    // o resto
+    return str.replace(/[^a-z0-9]/gi,''); 
+}
+
 export async function authRotes(app: FastifyInstance) {
   app.post('/autenticacao', async (request, reply) => {
     const bodySchema = z.object({
@@ -73,7 +85,7 @@ export async function authRotes(app: FastifyInstance) {
         }
       }
       if (nomeMae !== '') {
-        if (userAluno?.nomeMae === nomeMae) {
+        if (replaceSpecialChars(userAluno?.nomeMae.toUpperCase()) === replaceSpecialChars(nomeMae.toUpperCase())) {
           userExists = true
         }
       }
