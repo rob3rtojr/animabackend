@@ -36,11 +36,10 @@ model Regional {
 }
 
 model Municipio {
-  id         Int       @id @default(autoincrement())
-  nome       String
-  codigoIBGE String    @unique
-  createdAt  DateTime? @default(now())
-  updatedAt  DateTime? @default(now())
+  id        Int       @id @default(autoincrement())
+  nome      String
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @default(now())
 
   regional Regional @relation(fields: [regionalId], references: [id])
 
@@ -79,27 +78,53 @@ model Aluno {
   matricula      String
   nomeMae        String
 
-  turma         Turma           @relation(fields: [turmaId], references: [id])
+  turma         Turma             @relation(fields: [turmaId], references: [id])
   turmaId       Int
   RespostaAluno RespostaAluno[]
+  formularios   FormularioAluno[]
 }
 
 model Professor {
-  id             Int    @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   nome           String
   dataNascimento String
-  cpf            String @unique
+  cpf            String?
+  masp           String?
+  matricula      String?
 
-  municipio   Municipio @relation(fields: [municipioId], references: [id])
+  municipio   Municipio             @relation(fields: [municipioId], references: [id])
   municipioId Int
+  formularios FormularioProfessor[]
+}
+
+model FormularioAluno {
+  aluno        Aluno      @relation(fields: [alunoId], references: [id])
+  formulario   Formulario @relation(fields: [formularioId], references: [id])
+  situacao     Int
+  alunoId      Int
+  formularioId Int
+
+  @@id([alunoId, formularioId])
+}
+
+model FormularioProfessor {
+  professor    Professor  @relation(fields: [professorId], references: [id])
+  formulario   Formulario @relation(fields: [formularioId], references: [id])
+  situacao     Int
+  professorId  Int
+  formularioId Int
+
+  @@id([professorId, formularioId])
 }
 
 model Formulario {
-  id               Int                @id @default(autoincrement())
+  id               Int                   @id @default(autoincrement())
   nome             String
   tipo             String
   FormularioEstado FormularioEstado[]
   Pergunta         Pergunta[]
+  alunos           FormularioAluno[]
+  professores      FormularioProfessor[]
 }
 
 model FormularioEstado {

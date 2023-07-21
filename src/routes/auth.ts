@@ -10,21 +10,23 @@ export async function authRotes(app: FastifyInstance) {
       matricula: z.string(),
       nomeMae: z.string(),
       cpf: z.string(),
+      masp: z.string(),
+      matriculaProfessor: z.string(),
+      userType: z.string()
     })
 
-    const { id, dataNascimento, matricula, nomeMae, cpf } = bodySchema.parse(
+    const { id, dataNascimento, matricula, nomeMae, cpf, masp, matriculaProfessor, userType } = bodySchema.parse(
       request.body,
     )
     let userExists = false
-    let userType = ''
     let userName = ''
     let userId = 0
     let estadoId = 0
     let siglaEstado = ''
 
     // AUTENTICAÇÃO DE ALUNO
-    if (cpf === '') {
-      userType = 'aluno'
+    if (userType === 'aluno') {
+
       const userAluno = await prisma.aluno.findUnique({
         where: {
           id,
@@ -83,7 +85,6 @@ export async function authRotes(app: FastifyInstance) {
           : ''
       }
     } else {
-      userType = 'professor'
 
       const userProfessor = await prisma.professor.findUnique({
         where: {
@@ -114,6 +115,16 @@ export async function authRotes(app: FastifyInstance) {
           userExists = true
         }
       }
+      if (masp !== '') {
+        if (userProfessor?.masp === masp) {
+          userExists = true
+        }
+      }
+      if (matriculaProfessor !== '') {
+        if (userProfessor?.matricula === matriculaProfessor) {
+          userExists = true
+        }
+      }            
 
       if (userExists) {
         userName = userProfessor ? userProfessor.nome : ''
@@ -148,7 +159,7 @@ export async function authRotes(app: FastifyInstance) {
         },
         {
           sub: userId.toString(),
-          expiresIn: '1 days',
+          expiresIn: '1d',
         },
       )
       // console.log(token)
