@@ -16,6 +16,9 @@ export async function municipioRoutes(app: FastifyInstance) {
     const { regionalId } = paramsSchema.parse(request.params)
 
     const municipio = await prisma.municipio.findMany({
+      orderBy: [{
+        nome: 'asc'
+      }],      
       where: {
         regionalId,
       },

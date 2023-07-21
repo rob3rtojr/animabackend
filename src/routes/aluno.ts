@@ -11,6 +11,9 @@ export async function alunoRoutes(app: FastifyInstance) {
     const { turmaId } = paramsSchema.parse(request.params)
 
     const aluno = await prisma.aluno.findMany({
+      orderBy: [{
+        nome: 'asc'
+      }],
       where: {
         turmaId,
       },

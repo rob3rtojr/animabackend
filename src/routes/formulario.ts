@@ -17,6 +17,9 @@ export async function formulario(app: FastifyInstance) {
         {
           ordem: 'asc',
         },
+        {
+          id: 'asc'
+        }
       ],
       where: {
         formularioId: id,

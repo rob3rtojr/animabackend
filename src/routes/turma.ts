@@ -11,6 +11,9 @@ export async function turmaRoutes(app: FastifyInstance) {
     const { escolaId } = paramsSchema.parse(request.params)
 
     const turma = await prisma.turma.findMany({
+      orderBy: [{
+        nome: 'asc'
+      }],      
       where: {
         escolaId,
       },
