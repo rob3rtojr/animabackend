@@ -92,9 +92,10 @@ model Professor {
   masp           String?
   matricula      String?
 
-  municipio   Municipio             @relation(fields: [municipioId], references: [id])
-  municipioId Int
-  formularios FormularioProfessor[]
+  municipio         Municipio             @relation(fields: [municipioId], references: [id])
+  municipioId       Int
+  formularios       FormularioProfessor[]
+  RespostaProfessor RespostaProfessor[]
 }
 
 model FormularioAluno {
@@ -144,18 +145,19 @@ model TipoPergunta {
 }
 
 model Pergunta {
-  id             Int             @id @default(autoincrement())
-  descricao      String
-  numero         String
-  ordem          Int
-  tipoPergunta   TipoPergunta    @relation(fields: [tipoPerguntaId], references: [id])
-  tipoPerguntaId Int
-  timer          Int?
-  formulario     Formulario      @relation(fields: [formularioId], references: [id])
-  formularioId   Int
-  respostaAluno  RespostaAluno[]
-  alternativa    Alternativa[]
-  escutar        Escutar[]
+  id                Int                 @id @default(autoincrement())
+  descricao         String
+  numero            String
+  ordem             Int
+  tipoPergunta      TipoPergunta        @relation(fields: [tipoPerguntaId], references: [id])
+  tipoPerguntaId    Int
+  timer             Int?
+  formulario        Formulario          @relation(fields: [formularioId], references: [id])
+  formularioId      Int
+  respostaAluno     RespostaAluno[]
+  alternativa       Alternativa[]
+  escutar           Escutar[]
+  RespostaProfessor RespostaProfessor[]
 }
 
 model Escutar {
@@ -166,8 +168,6 @@ model Escutar {
   escutarPerguntaId    Int
   escutarAlternativaId Int
   perguntaId           Int
-
-  @@unique([escutarPerguntaId, escutarAlternativaId])
 }
 
 model Alternativa {
@@ -189,4 +189,16 @@ model RespostaAluno {
   alunoId    Int
 
   @@id([perguntaId, alunoId])
+}
+
+model RespostaProfessor {
+  descricao   String
+  createdAt   DateTime? @default(now())
+  updatedAt   DateTime? @default(now())
+  pergunta    Pergunta  @relation(fields: [perguntaId], references: [id])
+  perguntaId  Int
+  professor   Professor @relation(fields: [professorId], references: [id])
+  professorId Int
+
+  @@id([perguntaId, professorId])
 }

@@ -44,6 +44,27 @@ export async function resposta(app: FastifyInstance) {
         respostaAluno = []
       }
     } else if (tipo === 'professor') {
+      if (acao === 'I') {
+        respostaProfessor = await prisma.respostaProfessor.create({
+          data: {
+            professorId: pessoaId,
+            perguntaId,
+            descricao: resposta,
+          },
+        })
+      } else if (acao === 'A') {
+        {
+          respostaProfessor = await prisma.respostaProfessor.update({
+            where: { perguntaId_professorId: { perguntaId, professorId: pessoaId } },
+            data: { descricao: resposta },
+          })
+        }
+      } else if (acao === 'D') {
+        await prisma.respostaProfessor.delete({
+          where: { perguntaId_professorId: { perguntaId, professorId: pessoaId } },
+        })
+        respostaProfessor = []
+      }      
     }
 
     const resp = tipo === 'aluno' ? respostaAluno : respostaProfessor
