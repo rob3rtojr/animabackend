@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { resposta } from './resposta'
 
 export async function formulario(app: FastifyInstance) {
   app.get('/formulario/:id', async (request) => {
@@ -40,14 +41,31 @@ export async function formulario(app: FastifyInstance) {
       },
     })
 
-    const resposta = await prisma.respostaAluno.findMany({
-      where: {
-        alunoId: parseInt(request.user.sub.toString()),
-        pergunta: {
-          formularioId: id,
+    let respostaAluno: any[] = []
+    let respostaProfessor: any[] = []
+
+    if (request.user.type === "aluno") {
+      respostaAluno = await prisma.respostaAluno.findMany({
+        where: {
+          alunoId: parseInt(request.user.sub.toString()),
+          pergunta: {
+            formularioId: id,
+          },
         },
-      },
-    })
+      })
+    }
+    if (request.user.type === "professor") {
+      respostaProfessor = await prisma.respostaProfessor.findMany({
+        where: {
+          professorId: parseInt(request.user.sub.toString()),
+          pergunta: {
+            formularioId: id,
+          },
+        },
+      })
+    }
+
+    const resposta = request.user.type === "aluno" ? [...respostaAluno] : [...respostaProfessor]
 
     function filtrar(objetos: any[], perguntaId: number) {
       return objetos.filter((objeto) => objeto.perguntaId === perguntaId)

@@ -149,6 +149,13 @@ export async function authRotes(app: FastifyInstance) {
           userExists = true
         }
       }
+
+      if (dataNascimento !== '') {
+        if (userProfessor?.dataNascimento === dataNascimento) {
+          userExists = true
+        }
+      }
+
       if (masp !== '') {
         if (userProfessor?.masp === masp) {
           userExists = true
@@ -220,7 +227,7 @@ export async function authRotes(app: FastifyInstance) {
         },
         {
           sub: userId.toString(),
-          expiresIn: '1d',
+          expiresIn: '3h',
         },
       )
       // console.log(token)

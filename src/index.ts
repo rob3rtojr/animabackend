@@ -15,6 +15,10 @@ import { resposta } from './routes/resposta'
 import { apiRoutes } from './routes/api'
 import { municipioPorEstadoRoutes } from './routes/municipioPorEstado'
 
+import { listaFormulariosAluno } from './routes/listaFormulariosAluno'
+import { listaFormulariosProfessor } from './routes/listaFormulariosProfessor'
+import { situacaoFormulario } from './routes/situacaoFormulario'
+
 const app = fastify()
 
 app.register(cors, {
@@ -40,6 +44,10 @@ app.register(turmaRoutes)
 app.register(alunoRoutes)
 app.register(formulario)
 app.register(resposta)
+app.register(situacaoFormulario)
+app.register(listaFormulariosAluno)
+app.register(listaFormulariosProfessor)
+
 
 const port = process.env.PORT || 3333;
 
