@@ -28,7 +28,6 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
               id: true,
               nome: true,
               tipo:true,
-              
             }
           }
         }
