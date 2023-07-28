@@ -105,6 +105,13 @@ export async function authRotes(app: FastifyInstance) {
           userExists = true
         }
       }
+
+      if (cpf !== '') {
+        if (userAluno?.cpf === cpf) {
+          userExists = true
+        }
+      }
+
       if (nomeMae !== '') {
         if (replaceSpecialChars(getPrimeiroNome(userAluno?.nomeMae.toUpperCase())) === replaceSpecialChars(nomeMae.toUpperCase())) {
           userExists = true

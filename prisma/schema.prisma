@@ -72,11 +72,12 @@ model Turma {
 }
 
 model Aluno {
-  id             Int    @id @default(autoincrement())
+  id             Int     @id @default(autoincrement())
   nome           String
   dataNascimento String
   matricula      String
   nomeMae        String
+  cpf            String?
 
   turma         Turma             @relation(fields: [turmaId], references: [id])
   turmaId       Int
@@ -153,6 +154,10 @@ model Pergunta {
   tipoPergunta      TipoPergunta        @relation(fields: [tipoPerguntaId], references: [id])
   tipoPerguntaId    Int
   timer             Int?
+  valorMinimo       Int?
+  valorMaximo       Int?
+  step              Int?
+  mascaraResposta   String?
   formulario        Formulario          @relation(fields: [formularioId], references: [id])
   formularioId      Int
   respostaAluno     RespostaAluno[]
