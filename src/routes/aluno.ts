@@ -1,6 +1,8 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { atualizarNomes} from '../lib/util'
+
 
 export async function alunoRoutes(app: FastifyInstance) {
   app.get('/alunos/:turmaId', async (request) => {
@@ -17,8 +19,14 @@ export async function alunoRoutes(app: FastifyInstance) {
       where: {
         turmaId,
       },
+      select: {
+        id: true,
+        nome: true
+      }
     })
 
-    return aluno
+    const alunosAtualizados = atualizarNomes(aluno);
+
+    return alunosAtualizados
   })
 }

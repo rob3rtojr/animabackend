@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
+import { atualizarNomes } from '../lib/util'
 
 export async function professorRoutes(app: FastifyInstance) {
   app.get('/professores/:municipioId', async (request) => {
@@ -17,8 +18,13 @@ export async function professorRoutes(app: FastifyInstance) {
       where: {
         municipioId,
       },
+      select: {
+        id:true,
+        nome:true
+      }
     })
 
-    return professor
+    const professoresAtualizados = atualizarNomes(professor);
+    return professoresAtualizados
   })
 }

@@ -35,6 +35,12 @@ function getPrimeiroNome(nomeCompleto: string|undefined): string {
   return primeiroNome;
 }
 
+function removerCaracteresCpf(cpf: string): string {
+  // Remove os pontos e o traço do CPF
+  const cpfFormatado = cpf.replace(/\D/g, '');
+  return cpfFormatado;
+}
+
 
 export async function authRotes(app: FastifyInstance) {
   app.post('/autenticacao', async (request, reply) => {
@@ -107,7 +113,7 @@ export async function authRotes(app: FastifyInstance) {
       }
 
       if (cpf !== '') {
-        if (userAluno?.cpf === cpf) {
+        if (userAluno?.cpf === removerCaracteresCpf(cpf)) {
           userExists = true
         }
       }
@@ -152,7 +158,7 @@ export async function authRotes(app: FastifyInstance) {
       estadoId = userProfessor ? userProfessor.municipio.regional.estadoId : 0
 
       if (cpf !== '') {
-        if (userProfessor?.cpf === cpf) {
+        if (userProfessor?.cpf === removerCaracteresCpf(cpf)) {
           userExists = true
         }
       }
