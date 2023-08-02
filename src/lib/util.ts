@@ -2,7 +2,7 @@ type Pessoa = {
     id: number,
     nome: string
   }
-  
+
 export function formatName(name: string): string {
     const nameParts = name.split(' ');
     if (nameParts.length === 1) {
@@ -34,7 +34,7 @@ export function formatName(name: string): string {
             break;
   
           default:
-            formattedName += ` ${nameParts[i].charAt(0).toUpperCase()}`;
+            formattedName += ` ${nameParts[i].charAt(0).toUpperCase()}.`;
             break;
         }
   
