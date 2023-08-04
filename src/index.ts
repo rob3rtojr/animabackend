@@ -18,6 +18,8 @@ import { municipioPorEstadoRoutes } from './routes/municipioPorEstado'
 import { listaFormulariosAluno } from './routes/listaFormulariosAluno'
 import { listaFormulariosProfessor } from './routes/listaFormulariosProfessor'
 import { situacaoFormulario } from './routes/situacaoFormulario'
+import { quantitativo } from './routes/quantitativo'
+import { tipoFormulario } from './routes/tipoFormulario'
 
 const app = fastify()
 
@@ -47,6 +49,10 @@ app.register(resposta)
 app.register(situacaoFormulario)
 app.register(listaFormulariosAluno)
 app.register(listaFormulariosProfessor)
+app.register(quantitativo)
+app.register(tipoFormulario)
+
+
 
 
 const port = process.env.PORT || 3333;

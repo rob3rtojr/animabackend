@@ -127,7 +127,8 @@ model Formulario {
   Pergunta         Pergunta[]
   alunos           FormularioAluno[]
   professores      FormularioProfessor[]
-  termo            String
+  termo            String?
+  duracao          String?
 }
 
 model FormularioEstado {

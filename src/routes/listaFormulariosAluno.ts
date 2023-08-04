@@ -26,7 +26,8 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
             select: {
               id: true,
               nome: true,
-              tipo:true
+              tipo:true,
+              duracao:true
             }
           }
         }

@@ -1,45 +1,8 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
-import { afterEach } from 'node:test'
+import { removerCaracteres, replaceSpecialChars, getPrimeiroNome  } from '../lib/util'
 
-function replaceSpecialChars(str: string | undefined)
-{
-    if (str===undefined)
-      return ""
-
-    str = str.replace(/[ÀÁÂÃÄÅ]/,"A");
-    str = str.replace(/[àáâãäå]/,"a");
-    str = str.replace(/[ÈÉÊË]/,"E");
-    str = str.replace(/[Ç]/,"C");
-    str = str.replace(/[ç]/,"c");
-
-    // o resto
-    return str.replace(/[^a-z0-9]/gi,''); 
-}
-
-function getPrimeiroNome(nomeCompleto: string|undefined): string {
-
-  if (nomeCompleto===undefined)
-    return ""
-
-  // Remova possíveis espaços em excesso antes e depois do nome
-  const nomeSemEspacos = nomeCompleto.trim();
-
-  // Divida o nome completo usando espaços como separadores
-  const partesDoNome = nomeSemEspacos.split(" ");
-
-  // O primeiro nome será o primeiro elemento do array resultante
-  const primeiroNome = partesDoNome[0];
-
-  return primeiroNome;
-}
-
-function removerCaracteresCpf(cpf: string): string {
-  // Remove os pontos e o traço do CPF
-  const cpfFormatado = cpf.replace(/\D/g, '');
-  return cpfFormatado;
-}
 
 
 export async function authRotes(app: FastifyInstance) {
@@ -113,7 +76,7 @@ export async function authRotes(app: FastifyInstance) {
       }
 
       if (cpf !== '') {
-        if (userAluno?.cpf === removerCaracteresCpf(cpf)) {
+        if (userAluno?.cpf === removerCaracteres(cpf)) {
           userExists = true
         }
       }
@@ -158,7 +121,7 @@ export async function authRotes(app: FastifyInstance) {
       estadoId = userProfessor ? userProfessor.municipio.regional.estadoId : 0
 
       if (cpf !== '') {
-        if (userProfessor?.cpf === removerCaracteresCpf(cpf)) {
+        if (userProfessor?.cpf === removerCaracteres(cpf)) {
           userExists = true
         }
       }
@@ -170,7 +133,7 @@ export async function authRotes(app: FastifyInstance) {
       }
 
       if (masp !== '') {
-        if (userProfessor?.masp === masp) {
+        if (userProfessor?.masp === removerCaracteres(masp)) {
           userExists = true
         }
       }
