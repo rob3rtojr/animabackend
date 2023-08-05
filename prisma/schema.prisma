@@ -72,26 +72,27 @@ model Turma {
 }
 
 model Aluno {
-  id             Int     @id @default(autoincrement())
-  nome           String
-  dataNascimento String
-  matricula      String
-  nomeMae        String
-  cpf            String?
-
-  turma         Turma             @relation(fields: [turmaId], references: [id])
-  turmaId       Int
-  RespostaAluno RespostaAluno[]
-  formularios   FormularioAluno[]
+  id               Int               @id @default(autoincrement())
+  nome             String
+  dataNascimento   String
+  matricula        String
+  nomeMae          String
+  cpf              String?
+  possuiFormulario String?           @db.Char(1)
+  turma            Turma             @relation(fields: [turmaId], references: [id])
+  turmaId          Int
+  RespostaAluno    RespostaAluno[]
+  formularios      FormularioAluno[]
 }
 
 model Professor {
-  id             Int     @id @default(autoincrement())
-  nome           String
-  dataNascimento String
-  cpf            String?
-  masp           String?
-  matricula      String?
+  id               Int     @id @default(autoincrement())
+  nome             String
+  dataNascimento   String
+  cpf              String?
+  masp             String?
+  matricula        String?
+  possuiFormulario String? @db.Char(1)
 
   municipio         Municipio             @relation(fields: [municipioId], references: [id])
   municipioId       Int

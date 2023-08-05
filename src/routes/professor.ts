@@ -17,6 +17,7 @@ export async function professorRoutes(app: FastifyInstance) {
       }],      
       where: {
         municipioId,
+        possuiFormulario:"1"
       },
       select: {
         id:true,

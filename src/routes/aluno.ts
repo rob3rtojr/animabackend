@@ -18,6 +18,7 @@ export async function alunoRoutes(app: FastifyInstance) {
       }],
       where: {
         turmaId,
+        possuiFormulario:"1"
       },
       select: {
         id: true,
