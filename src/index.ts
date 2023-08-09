@@ -20,6 +20,7 @@ import { listaFormulariosProfessor } from './routes/listaFormulariosProfessor'
 import { situacaoFormulario } from './routes/situacaoFormulario'
 import { quantitativo } from './routes/quantitativo'
 import { tipoFormulario } from './routes/tipoFormulario'
+import { escolaPorRegionalRoutes } from './routes/escolaPorRegional'
 
 const app = fastify()
 
@@ -51,8 +52,7 @@ app.register(listaFormulariosAluno)
 app.register(listaFormulariosProfessor)
 app.register(quantitativo)
 app.register(tipoFormulario)
-
-
+app.register(escolaPorRegionalRoutes)
 
 
 const port = process.env.PORT || 3333;

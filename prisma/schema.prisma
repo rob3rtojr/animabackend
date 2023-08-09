@@ -130,6 +130,7 @@ model Formulario {
   professores      FormularioProfessor[]
   termo            String?
   duracao          String?
+  meta             Int?
 }
 
 model FormularioEstado {
