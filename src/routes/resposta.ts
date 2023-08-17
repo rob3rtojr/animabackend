@@ -2,6 +2,16 @@ import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
+function removeDuplicado(arr: string[]){
+  var tmp = [];
+  for(var i = 0; i < arr.length; i++){
+      if(tmp.indexOf(arr[i]) === -1){
+      tmp.push(arr[i]);
+      }
+  }
+  return tmp;
+}
+
 export async function resposta(app: FastifyInstance) {
   app.post('/resposta:', async (request) => {
     await request.jwtVerify()
@@ -18,8 +28,15 @@ export async function resposta(app: FastifyInstance) {
       request.body,
     )
 
+    let respostaGravar: string = ""
     let respostaAluno
     let respostaProfessor
+
+    if (perguntaId === 186) {
+      respostaGravar = removeDuplicado(resposta.split(',')).toString()
+    }else {
+      respostaGravar = resposta
+    }
 
     if (tipo === 'aluno') {
       if (acao === 'I') {
@@ -27,14 +44,14 @@ export async function resposta(app: FastifyInstance) {
           data: {
             alunoId: pessoaId,
             perguntaId,
-            descricao: resposta,
+            descricao: respostaGravar,
           },
         })
       } else if (acao === 'A') {
         {
           respostaAluno = await prisma.respostaAluno.update({
             where: { perguntaId_alunoId: { perguntaId, alunoId: pessoaId } },
-            data: { descricao: resposta },
+            data: { descricao: respostaGravar },
           })
         }
       } else if (acao === 'D') {
