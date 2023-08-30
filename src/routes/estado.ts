@@ -4,7 +4,11 @@ import { prisma } from '../lib/prisma'
 
 export async function estadoRoutes(app: FastifyInstance) {
   app.get('/estados', async () => {
-    const estados = await prisma.estado.findMany()
+    const estados = await prisma.estado.findMany({
+      where: {
+        situacao: 'A'
+      }
+    })
     return estados
   })
 

@@ -21,7 +21,10 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
       }],
       where: {
         regional: {
-          estadoId
+          estado: {
+            id: estadoId,
+            situacao: 'A'
+          }
         }
       },
     })
