@@ -3,6 +3,11 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
 export async function estadoRoutes(app: FastifyInstance) {
+  app.get('/estadosgeral', async () => {
+    const estados = await prisma.estado.findMany()
+    return estados
+  })
+
   app.get('/estados', async () => {
     const estados = await prisma.estado.findMany({
       where: {
