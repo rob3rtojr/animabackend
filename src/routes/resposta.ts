@@ -38,7 +38,7 @@ export async function resposta(app: FastifyInstance) {
         ? removeDuplicado(resposta.split(',')).toString()
         : resposta
     // } else {
-    //  respostaGravar = resposta .
+    //  respostaGravar = resposta
     // }
 
     if (tipo === 'aluno') {
