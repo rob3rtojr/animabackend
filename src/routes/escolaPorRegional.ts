@@ -11,19 +11,22 @@ export async function escolaPorRegionalRoutes(app: FastifyInstance) {
     const { regionalId } = paramsSchema.parse(request.params)
 
     const escola = await prisma.escola.findMany({
-      orderBy: [{
-        nome: 'asc'
-      }],      
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
       where: {
         municipio: {
-          regionalId
-        }
-      },select: {
+          regionalId,
+        },
+      },
+      select: {
         id: true,
         nome: true,
         codigoMec: true,
         municipio: true,
-      }
+      },
     })
 
     return escola

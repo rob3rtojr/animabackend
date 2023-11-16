@@ -14,7 +14,7 @@ datasource db {
 // criar uma migration: yarn prisma migrate dev
 model Estado {
   id        Int       @id @default(autoincrement())
-  nome      String
+  nome      String    @db.VarChar(50)
   sigla     String    @unique
   situacao  String?   @db.Char(1)
   createdAt DateTime? @default(now())
@@ -26,7 +26,7 @@ model Estado {
 
 model Regional {
   id        Int       @id @default(autoincrement())
-  nome      String
+  nome      String    @db.VarChar(50)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
 
@@ -38,7 +38,7 @@ model Regional {
 
 model Municipio {
   id        Int       @id @default(autoincrement())
-  nome      String
+  nome      String    @db.VarChar(50)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
 
@@ -51,7 +51,7 @@ model Municipio {
 
 model Escola {
   id              Int               @id @default(autoincrement())
-  nome            String
+  nome            String            @db.VarChar(150)
   codigoMec       String            @unique
   nomeRegional    String?           @db.VarChar(80)
   createdAt       DateTime?         @default(now())
@@ -64,7 +64,7 @@ model Escola {
 
 model Turma {
   id        Int       @id @default(autoincrement())
-  nome      String
+  nome      String    @db.VarChar(50)
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
 
@@ -75,11 +75,11 @@ model Turma {
 
 model Aluno {
   id               Int               @id @default(autoincrement())
-  nome             String
-  dataNascimento   String
-  matricula        String
-  nomeMae          String
-  cpf              String?
+  nome             String            @db.VarChar(200)
+  dataNascimento   String            @db.VarChar(10)
+  matricula        String            @db.VarChar(50)
+  nomeMae          String            @db.VarChar(200)
+  cpf              String?           @db.VarChar(11)
   possuiFormulario String?           @db.Char(1)
   turma            Turma             @relation(fields: [turmaId], references: [id])
   turmaId          Int
@@ -89,11 +89,11 @@ model Aluno {
 
 model Professor {
   id                Int                   @id @default(autoincrement())
-  nome              String
-  dataNascimento    String
-  cpf               String?
-  masp              String?
-  matricula         String?
+  nome              String                @db.VarChar(200)
+  dataNascimento    String                @db.VarChar(10)
+  cpf               String?               @db.VarChar(11)
+  masp              String?               @db.VarChar(20)
+  matricula         String?               @db.VarChar(20)
   possuiFormulario  String?               @db.Char(1)
   nomeRegional      String?               @db.VarChar(80)
   municipio         Municipio             @relation(fields: [municipioId], references: [id])
@@ -135,14 +135,14 @@ model FormularioProfessor {
 
 model Formulario {
   id               Int                   @id @default(autoincrement())
-  nome             String
-  tipo             String
+  nome             String                @db.VarChar(100)
+  tipo             String                @db.VarChar(10)
   FormularioEstado FormularioEstado[]
   Pergunta         Pergunta[]
   alunos           FormularioAluno[]
   professores      FormularioProfessor[]
   termo            String?
-  duracao          String?
+  duracao          String?               @db.VarChar(20)
   meta             Int?
 }
 
@@ -158,14 +158,14 @@ model FormularioEstado {
 
 model TipoPergunta {
   id        Int        @id @default(autoincrement())
-  descricao String
+  descricao String     @db.VarChar(30)
   Pergunta  Pergunta[]
 }
 
 model Pergunta {
   id                Int                 @id @default(autoincrement())
   descricao         String
-  numero            String
+  numero            String              @db.VarChar(5)
   ordem             Int
   tipoPergunta      TipoPergunta        @relation(fields: [tipoPerguntaId], references: [id])
   tipoPerguntaId    Int
@@ -173,7 +173,7 @@ model Pergunta {
   valorMinimo       Int?
   valorMaximo       Int?
   step              Int?
-  mascaraResposta   String?
+  mascaraResposta   String?             @db.VarChar(30)
   formulario        Formulario          @relation(fields: [formularioId], references: [id])
   formularioId      Int
   respostaAluno     RespostaAluno[]
@@ -195,14 +195,14 @@ model Escutar {
 model Alternativa {
   id         Int      @id @default(autoincrement())
   descricao  String
-  numero     String
+  numero     String   @db.VarChar(5)
   ordem      Int
   pergunta   Pergunta @relation(fields: [perguntaId], references: [id])
   perguntaId Int
 }
 
 model RespostaAluno {
-  descricao  String
+  descricao  String    @db.VarChar(50)
   createdAt  DateTime? @default(now())
   updatedAt  DateTime? @default(now())
   pergunta   Pergunta  @relation(fields: [perguntaId], references: [id])
@@ -214,7 +214,7 @@ model RespostaAluno {
 }
 
 model RespostaProfessor {
-  descricao   String
+  descricao   String    @db.VarChar(50)
   createdAt   DateTime? @default(now())
   updatedAt   DateTime? @default(now())
   pergunta    Pergunta  @relation(fields: [perguntaId], references: [id])

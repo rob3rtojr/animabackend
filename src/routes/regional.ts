@@ -11,9 +11,11 @@ export async function regionalRoutes(app: FastifyInstance) {
     const { estadoId } = paramsSchema.parse(request.params)
 
     const regional = await prisma.regional.findMany({
-      orderBy: [{
-        nome: 'asc'
-      }],      
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
       where: {
         estadoId,
       },

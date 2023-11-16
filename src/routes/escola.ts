@@ -11,9 +11,11 @@ export async function escolaRoutes(app: FastifyInstance) {
     const { municipioId } = paramsSchema.parse(request.params)
 
     const escola = await prisma.escola.findMany({
-      orderBy: [{
-        nome: 'asc'
-      }],      
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
       where: {
         municipioId,
       },

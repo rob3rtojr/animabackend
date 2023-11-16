@@ -1,9 +1,11 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
-import { removerCaracteres, replaceSpecialChars, getPrimeiroNome  } from '../lib/util'
-
-
+import {
+  removerCaracteres,
+  replaceSpecialChars,
+  getPrimeiroNome,
+} from '../lib/util'
 
 export async function authRotes(app: FastifyInstance) {
   app.post('/autenticacao', async (request, reply) => {
@@ -15,21 +17,27 @@ export async function authRotes(app: FastifyInstance) {
       cpf: z.string(),
       masp: z.string(),
       matriculaProfessor: z.string(),
-      userType: z.string()
+      userType: z.string(),
     })
 
-    const { id, dataNascimento, matricula, nomeMae, cpf, masp, matriculaProfessor, userType } = bodySchema.parse(
-      request.body,
-    )
+    const {
+      id,
+      dataNascimento,
+      matricula,
+      nomeMae,
+      cpf,
+      masp,
+      matriculaProfessor,
+      userType,
+    } = bodySchema.parse(request.body)
     let userExists = false
     let userName = ''
     let userId = 0
-    let estadoId = 0
+    const estadoId = 0
     let siglaEstado = ''
 
     // AUTENTICAÇÃO DE ALUNO
     if (userType === 'aluno') {
-
       const userAluno = await prisma.aluno.findUnique({
         where: {
           id,
@@ -60,9 +68,9 @@ export async function authRotes(app: FastifyInstance) {
         },
       })
 
-      estadoId = userAluno
-        ? userAluno.turma.escola.municipio.regional.estadoId
-        : 0
+      // estadoId = userAluno
+      //  ? userAluno.turma.escola.municipio.regional.estadoId
+      //  : 0
 
       if (dataNascimento !== '') {
         if (userAluno?.dataNascimento === dataNascimento) {
@@ -82,7 +90,11 @@ export async function authRotes(app: FastifyInstance) {
       }
 
       if (nomeMae !== '') {
-        if (replaceSpecialChars(getPrimeiroNome(userAluno?.nomeMae.toUpperCase())) === replaceSpecialChars(nomeMae.toUpperCase())) {
+        if (
+          replaceSpecialChars(
+            getPrimeiroNome(userAluno?.nomeMae.toUpperCase()),
+          ) === replaceSpecialChars(nomeMae.toUpperCase())
+        ) {
           userExists = true
         }
       }
@@ -95,7 +107,6 @@ export async function authRotes(app: FastifyInstance) {
           : ''
       }
     } else {
-
       const userProfessor = await prisma.professor.findUnique({
         where: {
           id,
@@ -118,7 +129,7 @@ export async function authRotes(app: FastifyInstance) {
         },
       })
 
-      estadoId = userProfessor ? userProfessor.municipio.regional.estadoId : 0
+      // estadoId = userProfessor ? userProfessor.municipio.regional.estadoId : 0
 
       if (cpf !== '') {
         if (userProfessor?.cpf === removerCaracteres(cpf)) {
@@ -141,7 +152,7 @@ export async function authRotes(app: FastifyInstance) {
         if (userProfessor?.matricula === matriculaProfessor) {
           userExists = true
         }
-      }            
+      }
 
       if (userExists) {
         userName = userProfessor ? userProfessor.nome : ''
@@ -153,46 +164,42 @@ export async function authRotes(app: FastifyInstance) {
     }
 
     if (userExists) {
-
       let formularios
 
-      if (userType==="aluno") {
-
+      if (userType === 'aluno') {
         formularios = await prisma.formularioAluno.findMany({
           where: {
-            alunoId: userId          
+            alunoId: userId,
           },
           select: {
-            alunoId:true,
+            alunoId: true,
             situacao: true,
             formulario: {
               select: {
                 id: true,
                 nome: true,
-                tipo:true
-              }
-            }
-          }
+                tipo: true,
+              },
+            },
+          },
         })
-
-      }
-      else {
+      } else {
         formularios = await prisma.formularioProfessor.findMany({
           where: {
-            professorId: userId          
+            professorId: userId,
           },
           select: {
-            professorId:true,
+            professorId: true,
             situacao: true,
             formulario: {
               select: {
                 id: true,
                 nome: true,
-                tipo: true
-              }
-            }
-          }
-        })        
+                tipo: true,
+              },
+            },
+          },
+        })
       }
 
       const token = app.jwt.sign(

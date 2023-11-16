@@ -21,19 +21,19 @@ import { situacaoFormulario } from './routes/situacaoFormulario'
 import { quantitativo } from './routes/quantitativo'
 import { tipoFormulario } from './routes/tipoFormulario'
 import { escolaPorRegionalRoutes } from './routes/escolaPorRegional'
+import { correcao186 } from './routes/correcao186'
 
 const app = fastify()
 
 app.register(cors, {
   origin: true,
   // EM PRODUCAO, ALTERAR PARA:
-  //origin: ['https://animabackend.azurewebsites.net/','http://localhost:3000'],
+  // origin: ['https://animabackend.azurewebsites.net/','http://localhost:3000'],
 })
 
 app.register(jwt, {
   secret: 'UIUWPOEIRUNWPOIERIijkjgçiwrutnbçlerutvnweiru @!',
 })
-
 
 app.register(apiRoutes)
 app.register(authRotes)
@@ -53,14 +53,14 @@ app.register(listaFormulariosProfessor)
 app.register(quantitativo)
 app.register(tipoFormulario)
 app.register(escolaPorRegionalRoutes)
+app.register(correcao186)
 
-
-const port = process.env.PORT || 3333;
+const port = process.env.PORT || 3333
 
 app
   .listen({
     port: Number(port),
-    host: '0.0.0.0'
+    host: '0.0.0.0',
   })
   .then(() => {
     console.log(`---> RS Server running on port:${port}`)

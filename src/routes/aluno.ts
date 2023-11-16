@@ -1,8 +1,7 @@
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
-import { atualizarNomes} from '../lib/util'
-
+import { atualizarNomes } from '../lib/util'
 
 export async function alunoRoutes(app: FastifyInstance) {
   app.get('/alunos/:turmaId', async (request) => {
@@ -13,20 +12,22 @@ export async function alunoRoutes(app: FastifyInstance) {
     const { turmaId } = paramsSchema.parse(request.params)
 
     const aluno = await prisma.aluno.findMany({
-      orderBy: [{
-        nome: 'asc'
-      }],
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
       where: {
         turmaId,
-        possuiFormulario:"1"
+        possuiFormulario: '1',
       },
       select: {
         id: true,
-        nome: true
-      }
+        nome: true,
+      },
     })
 
-    const alunosAtualizados = atualizarNomes(aluno);
+    const alunosAtualizados = atualizarNomes(aluno)
 
     return alunosAtualizados
   })

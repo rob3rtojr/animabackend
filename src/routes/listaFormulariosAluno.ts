@@ -10,28 +10,24 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
       alunoId: z.coerce.number(),
     })
 
-    const { alunoId } = paramSchema.parse(
-      request.params,
-    )
-  
+    const { alunoId } = paramSchema.parse(request.params)
 
-      const formularios = await prisma.formularioAluno.findMany({
-        where: {
-          alunoId          
+    const formularios = await prisma.formularioAluno.findMany({
+      where: {
+        alunoId,
+      },
+      select: {
+        situacao: true,
+        formulario: {
+          select: {
+            id: true,
+            nome: true,
+            tipo: true,
+            duracao: true,
+          },
         },
-        select: {
-
-          situacao: true,
-          formulario: {
-            select: {
-              id: true,
-              nome: true,
-              tipo:true,
-              duracao:true
-            }
-          }
-        }
-      })
+      },
+    })
 
     return formularios
   })

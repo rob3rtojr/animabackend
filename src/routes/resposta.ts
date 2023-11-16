@@ -2,14 +2,14 @@ import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
-function removeDuplicado(arr: string[]){
-  var tmp = [];
-  for(var i = 0; i < arr.length; i++){
-      if(tmp.indexOf(arr[i]) === -1){
-      tmp.push(arr[i]);
-      }
+function removeDuplicado(arr: string[]) {
+  const tmp = []
+  for (let i = 0; i < arr.length; i++) {
+    if (tmp.indexOf(arr[i]) === -1) {
+      tmp.push(arr[i])
+    }
   }
-  return tmp;
+  return tmp
 }
 
 export async function resposta(app: FastifyInstance) {
@@ -28,15 +28,18 @@ export async function resposta(app: FastifyInstance) {
       request.body,
     )
 
-    let respostaGravar: string = ""
+    let respostaGravar: string = ''
     let respostaAluno
     let respostaProfessor
 
-    if (perguntaId === 186) {
-      respostaGravar = removeDuplicado(resposta.split(',')).toString()
-    }else {
-      respostaGravar = resposta
-    }
+    // if (perguntaId === 186) {
+    respostaGravar =
+      perguntaId === 186
+        ? removeDuplicado(resposta.split(',')).toString()
+        : resposta
+    // } else {
+    //  respostaGravar = resposta
+    // }
 
     if (tipo === 'aluno') {
       if (acao === 'I') {
@@ -72,16 +75,20 @@ export async function resposta(app: FastifyInstance) {
       } else if (acao === 'A') {
         {
           respostaProfessor = await prisma.respostaProfessor.update({
-            where: { perguntaId_professorId: { perguntaId, professorId: pessoaId } },
+            where: {
+              perguntaId_professorId: { perguntaId, professorId: pessoaId },
+            },
             data: { descricao: resposta },
           })
         }
       } else if (acao === 'D') {
         await prisma.respostaProfessor.delete({
-          where: { perguntaId_professorId: { perguntaId, professorId: pessoaId } },
+          where: {
+            perguntaId_professorId: { perguntaId, professorId: pessoaId },
+          },
         })
         respostaProfessor = []
-      }      
+      }
     }
 
     const resp = tipo === 'aluno' ? respostaAluno : respostaProfessor

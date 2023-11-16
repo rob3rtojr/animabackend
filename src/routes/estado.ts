@@ -11,8 +11,8 @@ export async function estadoRoutes(app: FastifyInstance) {
   app.get('/estados', async () => {
     const estados = await prisma.estado.findMany({
       where: {
-        situacao: 'A'
-      }
+        situacao: 'A',
+      },
     })
     return estados
   })

@@ -16,16 +16,18 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
     const { estadoId } = paramsSchema.parse(request.params)
 
     const municipioPorEstado = await prisma.municipio.findMany({
-      orderBy: [{
-        nome: 'asc'
-      }],
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
       where: {
         regional: {
           estado: {
             id: estadoId,
-            situacao: 'A'
-          }
-        }
+            situacao: 'A',
+          },
+        },
       },
     })
 
