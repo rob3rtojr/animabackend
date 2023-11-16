@@ -1,5 +1,5 @@
 # animabackend
-Back end do formulário do instituto anima..
+Back end do formulário do instituto anima...
 
 Para rodar na vercel:
 
