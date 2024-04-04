@@ -22,14 +22,14 @@ export async function formulario(app: FastifyInstance) {
         },
       ],
       where: {
-        formularioId: id,
+        formularioId: id
       },
       include: {
         alternativa: {
           select: {
             id: true,
             descricao: true,
-          },
+          }
         },
         escutar: {
           select: {
@@ -97,9 +97,9 @@ export async function formulario(app: FastifyInstance) {
         if (respostaPergunta.length > 0) {
           // let x = respostaPergunta.find((rp) => { rp === a.id.toString() })
           bolResposta = respostaPergunta.indexOf(a.id.toString()) > -1
-          if (f.id === 17) {
-            console.log(respostaPergunta)
-          }
+          // if (f.id === 17) {
+          //   console.log(respostaPergunta)
+          // }
         }
         formularioComResposta[index].alternativa[indexAlternativa] = {
           ...alternativa[indexAlternativa],

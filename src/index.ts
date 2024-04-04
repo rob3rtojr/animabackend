@@ -11,7 +11,6 @@ import { alunoRoutes } from './routes/aluno'
 import { authRotes } from './routes/auth'
 import { formulario } from './routes/formulario'
 import { professorRoutes } from './routes/professor'
-import { resposta } from './routes/resposta'
 import { apiRoutes } from './routes/api'
 import { municipioPorEstadoRoutes } from './routes/municipioPorEstado'
 
@@ -22,6 +21,8 @@ import { quantitativo } from './routes/quantitativo'
 import { tipoFormulario } from './routes/tipoFormulario'
 import { escolaPorRegionalRoutes } from './routes/escolaPorRegional'
 import { correcao186 } from './routes/correcao186'
+import { respostav2 } from './routes/respostav2'
+import { respostav2DeleteMany } from './routes/respostav2DeleteMany'
 
 const app = fastify()
 
@@ -46,7 +47,6 @@ app.register(escolaRoutes)
 app.register(turmaRoutes)
 app.register(alunoRoutes)
 app.register(formulario)
-app.register(resposta)
 app.register(situacaoFormulario)
 app.register(listaFormulariosAluno)
 app.register(listaFormulariosProfessor)
@@ -54,6 +54,10 @@ app.register(quantitativo)
 app.register(tipoFormulario)
 app.register(escolaPorRegionalRoutes)
 app.register(correcao186)
+
+//v2
+app.register(respostav2)
+app.register(respostav2DeleteMany)
 
 const port = process.env.PORT || 3333
 

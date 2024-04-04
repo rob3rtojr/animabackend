@@ -1,14 +1,21 @@
 
---select * from formulario
-declare @formularioId int = 4
-declare @estadoId int = 3
+--select * from formularioaluno where formularioid=4 and alunoid=894988
+--select * from aluno where id = 894988
+--SELECT * FROM FORMULARIO
+declare @formularioId int = 6
+declare @estadoId int = 2
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
 
 IF OBJECT_ID('tempdb..#tempPergunta') IS NOT NULL DROP TABLE #tempPergunta
-IF OBJECT_ID('tempdb..tempResp') IS NOT NULL DROP TABLE tempResp
+IF OBJECT_ID('tempResp') IS NOT NULL DROP TABLE tempResp
 IF OBJECT_ID('tempdb..#tempRespMultipla') IS NOT NULL DROP TABLE #tempRespMultipla
+
+--select p.numero, r.* from RespostaAluno r
+--inner join pergunta p on r.perguntaId = p.id
+--where alunoId = 903776
+--order by p.ordem
 
 --drop table resposta_aluno_4_correcao_20230816
 --drop table respostaAlunoBKP_20230816
@@ -17,6 +24,7 @@ IF OBJECT_ID('tempdb..#tempRespMultipla') IS NOT NULL DROP TABLE #tempRespMultip
 --drop table tempResp
 select 
 	ra.alunoId,
+	a.cpf,
 	a.matricula,
 	a.nome as aluno, 
 	a.nomeMae,
@@ -86,20 +94,22 @@ update r
 set r.resposta = r.descricao
 from tempResp R 
 where r.tipoPerguntaId in (3,5)
----|CORREÇÕES
-delete from tempResp 
-where AlunoId in (select alunoid from tempResp where perguntaId = 186 and descricao = '626')
-and perguntaId in (187,189,190,191,192,193)
 
-delete from tempResp 
-where AlunoId in (select alunoid from tempResp where perguntaId = 418 and descricao = '1422')
-and perguntaId in (419,420)
+-----|CORREÇÕES
+--select * from pergunta
+--delete from tempResp 
+--where AlunoId in (select alunoid from tempResp where perguntaId = 186 and descricao = '626')
+--and perguntaId in (187,189,190,191,192,193)
 
-delete from tempResp 
-where AlunoId in (select alunoid from tempResp where perguntaId = 418 and descricao = '1423')
-and perguntaId in (419,420)
+--delete from tempResp 
+--where AlunoId in (select alunoid from tempResp where perguntaId = 418 and descricao = '1422')
+--and perguntaId in (419,420)
 
-return
+--delete from tempResp 
+--where AlunoId in (select alunoid from tempResp where perguntaId = 418 and descricao = '1423')
+--and perguntaId in (419,420)
+
+--return
 -----------COL?GIO EST. ENS. M?DIO PRESID. FERNANDO HENRIQUE
 --SELECT * FROM ESCOLA WHERE LEFT(CODIGOMEC,2)='15' AND NOME LIKE '%SEBASTI%'
 --BEGIN TRAN
@@ -108,11 +118,11 @@ return
 --UPDATE ESCOLA SET NOME ='EMEF MARCI SEBASTIAO NUNES (ANEXO I)' WHERE ID = 8114
 
 --COMMIT
-declare @formularioId int = 4
-declare @estadoId int = 3
+--declare @formularioId int = 4
+--declare @estadoId int = 3
 
-declare @colunas_pivot as nvarchar(max)
-declare @comando_sql  as nvarchar(max)
+--declare @colunas_pivot as nvarchar(max)
+--declare @comando_sql  as nvarchar(max)
 -----
 select numero
 into #tempPergunta
@@ -134,11 +144,12 @@ set @colunas_pivot =
 -----------
 
 set @comando_sql = '
-		select * from(
+		select * 
+		from(
 
 			select 
 			ra.alunoId, 
-
+			ra.cpf,
 			ra.matricula,
 			ra.aluno, 
 			ra.nomeMae,
@@ -160,7 +171,6 @@ set @comando_sql = '
 		order by 1'
 execute(@comando_sql)
 go
----select * from pergunta where formularioid=4
 ------------------------------------------
 --drop table tempResp
 --drop table #tempRespA

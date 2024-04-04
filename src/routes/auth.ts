@@ -210,7 +210,7 @@ export async function authRotes(app: FastifyInstance) {
         },
         {
           sub: userId.toString(),
-          expiresIn: '3h',
+          expiresIn: '2h',
         },
       )
       // console.log(token)

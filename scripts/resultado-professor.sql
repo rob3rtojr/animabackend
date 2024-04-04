@@ -3,8 +3,8 @@
 --select * from ESTADO
 --select * from pergunta where formularioid=5 and numero=36
 --select * from escutar where escutarperguntaid=325
-declare @formularioId int = 5
-declare @estadoId int = 3
+declare @formularioId int = 7
+declare @estadoId int = 2
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
@@ -48,7 +48,6 @@ select
 	e.nome as escola, 
 	m.nome as municipio, 
 	r.nome as regional, 
-
 	p.numero as numeroPergunta, 
 	rp.perguntaId, 
 	rp.descricao, 
@@ -115,6 +114,7 @@ set @comando_sql = '
 
 			select 
 			rp.professorId, 
+			rp.cpf,
 			rp.professor, 
 			rp.masp,
 			rp.matricula,
