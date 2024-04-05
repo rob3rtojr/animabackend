@@ -13,7 +13,7 @@ import { prisma } from '../lib/prisma'
 // }
 
 export async function respostav2(app: FastifyInstance) {
-  app.post('/respostav2:', async (request) => {
+  app.post('/respostav2:', async (request, res) => {
     await request.jwtVerify()
 
     const bodySchema = z.object({
@@ -28,9 +28,6 @@ export async function respostav2(app: FastifyInstance) {
     const { perguntaId, pessoaId, resposta, tipo } = bodySchema.parse(
       request.body,
     )
-
-    // const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
-    // await delay(3000)
 
     try {
       prisma.$transaction(async (tx) => {
@@ -102,12 +99,12 @@ export async function respostav2(app: FastifyInstance) {
 
         const resp = tipo === 'aluno' ? respostaAluno : respostaProfessor
 
-        return resp
+        return res.status(200)
 
       })
     } catch (e) {
       console.log("ocorreu um erro!")
-      return { message: "erro" }
+      return res.status(500)
     }
 
 
