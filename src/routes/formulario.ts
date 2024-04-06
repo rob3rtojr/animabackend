@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
 export async function formulario(app: FastifyInstance) {
-  app.get('/formulario/:id', async (request) => {
+  app.get('/formulario/:id', async (request, res) => {
     await request.jwtVerify()
 
     const paramsSchema = z.object({
@@ -11,6 +11,29 @@ export async function formulario(app: FastifyInstance) {
     })
 
     const { id } = paramsSchema.parse(request.params)
+
+    let pessoaId: number = parseInt(request.user.sub.toString())
+    let userType: string = request.user.type
+
+    if (userType === "aluno") {
+
+    }else {
+
+      const situacaoFormulario = await prisma.formularioProfessor.findFirst({
+        where: {
+          professorId: pessoaId,
+          formularioId: id
+        }
+      })
+
+      console.log(situacaoFormulario)
+
+      if (situacaoFormulario?.situacao===3) {
+        return res.status(401).send([])
+      }
+
+    }
+  
 
     const formulario = await prisma.pergunta.findMany({
       orderBy: [
