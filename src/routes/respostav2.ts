@@ -13,7 +13,6 @@ import { prisma } from '../lib/prisma'
 // }
 
 export async function respostav2(app: FastifyInstance) {
-
   app.post('/respostav2:', async (request, res) => {
     await request.jwtVerify()
 
@@ -22,7 +21,7 @@ export async function respostav2(app: FastifyInstance) {
       pessoaId: z.coerce.number(),
       resposta: z.string(),
       tipo: z.string(),
-      //acao: z.string().length(1),
+      // acao: z.string().length(1),
     })
 
     const { perguntaId, pessoaId, resposta, tipo } = bodySchema.parse(
@@ -30,25 +29,20 @@ export async function respostav2(app: FastifyInstance) {
     )
 
     // Simular atraso de 2 segundos
-    //await new Promise(resolve => setTimeout(resolve, 3000));
+    // await new Promise(resolve => setTimeout(resolve, 3000));
 
     try {
-
-      const resultado: any[] = await prisma.$queryRaw`exec SP_GravaResposta ${pessoaId},${perguntaId},${resposta},${tipo}`
+      const resultado: any[] =
+        await prisma.$queryRaw`exec SP_GravaResposta ${pessoaId},${perguntaId},${resposta},${tipo}`
 
       if (resultado[0].mensagem === 'OK') {
         return res.status(200).send(resultado)
-      }else {
+      } else {
         return res.status(500).send(resultado)
       }
-
-      
     } catch (e) {
-      console.log("ocorreu um erro!")
+      console.log('ocorreu um erro!')
       return res.status(500)
     }
-
-
   })
-
 }

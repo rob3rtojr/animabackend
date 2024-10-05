@@ -12,28 +12,30 @@ export async function formulario(app: FastifyInstance) {
 
     const { id } = paramsSchema.parse(request.params)
 
-    let pessoaId: number = parseInt(request.user.sub.toString())
-    let userType: string = request.user.type
-
-    if (userType === "aluno") {
-
-    }else {
-
-      const situacaoFormulario = await prisma.formularioProfessor.findFirst({
+    const pessoaId: number = parseInt(request.user.sub.toString())
+    const userType: string = request.user.type
+    let situacaoFormulario
+    if (userType === 'aluno') {
+      situacaoFormulario = await prisma.formularioAluno.findFirst({
+        where: {
+          alunoId: pessoaId,
+          formularioId: id,
+        },
+      })
+    } else {
+      situacaoFormulario = await prisma.formularioProfessor.findFirst({
         where: {
           professorId: pessoaId,
-          formularioId: id
-        }
+          formularioId: id,
+        },
       })
-
-      console.log(situacaoFormulario)
-
-      if (situacaoFormulario?.situacao===3) {
-        return res.status(401).send([])
-      }
-
     }
-  
+
+    console.log(situacaoFormulario)
+
+    if (situacaoFormulario?.situacao === 3) {
+      return res.status(401).send([])
+    }
 
     const formulario = await prisma.pergunta.findMany({
       orderBy: [
@@ -45,14 +47,14 @@ export async function formulario(app: FastifyInstance) {
         },
       ],
       where: {
-        formularioId: id
+        formularioId: id,
       },
       include: {
         alternativa: {
           select: {
             id: true,
             descricao: true,
-          }
+          },
         },
         escutar: {
           select: {
@@ -99,7 +101,7 @@ export async function formulario(app: FastifyInstance) {
     const formularioComResposta = [...formulario]
 
     formulario.map((f, index) => {
-      let respostaPergunta = new Array<string>()
+      let respostaPergunta: string[] = []
       const alternativa = [...formulario[index].alternativa]
 
       const filtroResposta = filtrar(resposta, f.id)
