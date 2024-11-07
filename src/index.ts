@@ -23,6 +23,8 @@ import { escolaPorRegionalRoutes } from './routes/escolaPorRegional'
 import { correcao186 } from './routes/correcao186'
 import { respostav2 } from './routes/respostav2'
 import { respostav2DeleteMany } from './routes/respostav2DeleteMany'
+import { formularioSA } from './routes/formularioSA'
+import { respostaSA } from './routes/respostaSA'
 
 const app = fastify()
 
@@ -47,6 +49,7 @@ app.register(escolaRoutes)
 app.register(turmaRoutes)
 app.register(alunoRoutes)
 app.register(formulario)
+app.register(formularioSA)
 app.register(situacaoFormulario)
 app.register(listaFormulariosAluno)
 app.register(listaFormulariosProfessor)
@@ -55,7 +58,8 @@ app.register(tipoFormulario)
 app.register(escolaPorRegionalRoutes)
 app.register(correcao186)
 
-//v2
+// v2
+app.register(respostaSA)
 app.register(respostav2)
 app.register(respostav2DeleteMany)
 

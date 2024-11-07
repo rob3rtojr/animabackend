@@ -100,16 +100,16 @@ export async function formulario(app: FastifyInstance) {
 
     const formularioComResposta = [...formulario]
 
-    formulario.map((f, index) => {
+    formulario.forEach((f, index) => {
       let respostaPergunta: string[] = []
-      const alternativa = [...formulario[index].alternativa]
+      const alternativa = [...f.alternativa]
 
       const filtroResposta = filtrar(resposta, f.id)
       if (filtroResposta.length > 0) {
-        filtroResposta.map((rr) => {
+        filtroResposta.forEach((rr) => {
           if (rr.descricao) {
             if (f.tipoPerguntaId === 2) {
-              respostaPergunta = [...rr.descricao.split(',')]
+              respostaPergunta = rr.descricao.split(',')
             } else {
               respostaPergunta.push(rr.descricao)
             }
@@ -117,21 +117,16 @@ export async function formulario(app: FastifyInstance) {
         })
       }
 
-      f.alternativa.map((a, indexAlternativa) => {
+      f.alternativa.forEach((a, indexAlternativa) => {
         let bolResposta = false
         if (respostaPergunta.length > 0) {
-          // let x = respostaPergunta.find((rp) => { rp === a.id.toString() })
-          bolResposta = respostaPergunta.indexOf(a.id.toString()) > -1
-          // if (f.id === 17) {
-          //   console.log(respostaPergunta)
-          // }
+          bolResposta = respostaPergunta.includes(a.id.toString())
         }
         formularioComResposta[index].alternativa[indexAlternativa] = {
           ...alternativa[indexAlternativa],
           ...{ isChecked: bolResposta },
         }
       })
-      // console.log({ ...formularioComResposta[index], ...{ "resposta": respostaPergunta } })
 
       formularioComResposta[index] = {
         ...formularioComResposta[index],
