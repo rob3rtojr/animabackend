@@ -1,22 +1,20 @@
-/* eslint-disable prettier/prettier */
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
 
-export async function respostaSA(app: FastifyInstance) {
-  app.post('/respostaSA', async (request, res) => {
+export async function deletaResposta(app: FastifyInstance) {
+  app.post('/deletaResposta', async (request, res) => {
     const bodySchema = z.object({
-      estadoId: z.coerce.number(),
-      resposta: z.string(),
+      listaIdPergunta: z.string(),
+      pessoaId: z.coerce.number(),
       tipo: z.string(),
     })
 
-    const { estadoId, resposta, tipo } = bodySchema.parse(request.body)
+    const { listaIdPergunta, pessoaId, tipo } = bodySchema.parse(request.body)
 
     try {
       const resultado: any[] =
-        await prisma.$queryRaw`exec SP_GravaRespostaSA @estadoId=${estadoId}, @json=${resposta}, @tipo=${tipo}`
-
+        await prisma.$queryRaw`exec SP_DeletaResposta @listaIdPergunta=${listaIdPergunta}, @pessoaId=${pessoaId}, @tipo=${tipo}`
       const { Success, Message } = resultado[0] || {
         Success: 0,
         Message: 'Erro desconhecido',

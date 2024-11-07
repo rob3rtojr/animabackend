@@ -25,6 +25,7 @@ import { respostav2 } from './routes/respostav2'
 import { respostav2DeleteMany } from './routes/respostav2DeleteMany'
 import { formularioSA } from './routes/formularioSA'
 import { respostaSA } from './routes/respostaSA'
+import { deletaResposta } from './routes/deletaResposta'
 
 const app = fastify()
 
@@ -62,6 +63,7 @@ app.register(correcao186)
 app.register(respostaSA)
 app.register(respostav2)
 app.register(respostav2DeleteMany)
+app.register(deletaResposta)
 
 const port = process.env.PORT || 3333
 
