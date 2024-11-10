@@ -8,6 +8,22 @@ export async function estadoRoutes(app: FastifyInstance) {
     return estados
   })
 
+  app.get('/estadosgeral/:sigla', async (request) => {
+    const paramsSchema = z.object({
+      sigla: z.string().length(2),
+    })
+
+    const { sigla } = paramsSchema.parse(request.params)
+
+    const estado = await prisma.estado.findUniqueOrThrow({
+      where: {
+        sigla,
+      },
+    })
+
+    return estado
+  })
+
   app.get('/estados', async () => {
     const estados = await prisma.estado.findMany({
       where: {
