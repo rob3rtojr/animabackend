@@ -33,7 +33,7 @@ export async function authRotes(app: FastifyInstance) {
     let userExists = false
     let userName = ''
     let userId = 0
-    const estadoId = 0
+    // const estadoId = 0
     let siglaEstado = ''
 
     // AUTENTICAÇÃO DE ALUNO
