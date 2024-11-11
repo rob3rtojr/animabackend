@@ -13,23 +13,89 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
       estadoId: z.coerce.number(),
     })
 
-    const { estadoId } = paramsSchema.parse(request.params)
+    // Validação dos parâmetros da query
+    const querySchema = z.object({
+      tipo: z.string().optional(),
+    })
 
-    const municipioPorEstado = await prisma.municipio.findMany({
-      orderBy: [
-        {
-          nome: 'asc',
-        },
-      ],
-      where: {
-        regional: {
-          estado: {
-            id: estadoId,
-            situacao: 'A',
+    const { estadoId } = paramsSchema.parse(request.params)
+    const { tipo } = querySchema.parse(request.query)
+
+    let municipioPorEstado
+
+    if (tipo === 'aluno') {
+      console.log('filtro aluno')
+      municipioPorEstado = await prisma.municipio.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          regional: {
+            estado: {
+              id: estadoId,
+              situacao: 'A',
+            },
+          },
+          Escola: {
+            some: {
+              Turma: {
+                some: {},
+              },
+            },
           },
         },
-      },
-    })
+        select: {
+          id: true,
+          nome: true,
+        },
+      })
+    } else if (tipo === 'professor') {
+      municipioPorEstado = await prisma.municipio.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          regional: {
+            estado: {
+              id: estadoId,
+              situacao: 'A',
+            },
+          },
+          Professor: {
+            some: {},
+          },
+        },
+        select: {
+          id: true,
+          nome: true,
+        },
+      })
+    } else {
+      console.log('sem filtro')
+      municipioPorEstado = await prisma.municipio.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          regional: {
+            estado: {
+              id: estadoId,
+              situacao: 'A',
+            },
+          },
+        },
+        select: {
+          id: true,
+          nome: true,
+        },
+      })
+    }
 
     return municipioPorEstado
   })

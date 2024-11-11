@@ -8,18 +8,56 @@ export async function escolaRoutes(app: FastifyInstance) {
       municipioId: z.coerce.number(),
     })
 
-    const { municipioId } = paramsSchema.parse(request.params)
-
-    const escola = await prisma.escola.findMany({
-      orderBy: [
-        {
-          nome: 'asc',
-        },
-      ],
-      where: {
-        municipioId,
-      },
+    // Validação dos parâmetros da query
+    const querySchema = z.object({
+      tipo: z.string().optional(),
     })
+
+    const { municipioId } = paramsSchema.parse(request.params)
+    const { tipo } = querySchema.parse(request.query)
+
+    let escola
+
+    if (tipo === 'aluno') {
+      escola = await prisma.escola.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          municipioId,
+          Turma: {
+            some: {},
+          },
+        },
+        select: {
+          id: true,
+          nome: true,
+          codigoMec: true,
+          nomeRegional: true,
+          municipioId: true,
+        },
+      })
+    } else {
+      escola = await prisma.escola.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          municipioId,
+        },
+        select: {
+          id: true,
+          nome: true,
+          codigoMec: true,
+          nomeRegional: true,
+          municipioId: true,
+        },
+      })
+    }
 
     return escola
   })
