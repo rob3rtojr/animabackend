@@ -21,6 +21,9 @@ export async function formularioSA(app: FastifyInstance) {
       ],
       where: {
         formularioId: id,
+        formulario: {
+          permiteSemAutenticacao: '1',
+        },
       },
       include: {
         alternativa: {

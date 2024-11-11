@@ -134,16 +134,17 @@ model FormularioProfessor {
 }
 
 model Formulario {
-  id               Int                   @id @default(autoincrement())
-  nome             String                @db.VarChar(100)
-  tipo             String                @db.VarChar(10)
-  FormularioEstado FormularioEstado[]
-  Pergunta         Pergunta[]
-  alunos           FormularioAluno[]
-  professores      FormularioProfessor[]
-  termo            String?
-  duracao          String?               @db.VarChar(20)
-  meta             Int?
+  id                     Int                   @id @default(autoincrement())
+  nome                   String                @db.VarChar(100)
+  tipo                   String                @db.VarChar(10)
+  FormularioEstado       FormularioEstado[]
+  Pergunta               Pergunta[]
+  alunos                 FormularioAluno[]
+  professores            FormularioProfessor[]
+  termo                  String?
+  duracao                String?               @db.VarChar(20)
+  meta                   Int?
+  permiteSemAutenticacao String                @db.Char(1)
 }
 
 model FormularioEstado {
