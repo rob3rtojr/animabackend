@@ -24,6 +24,44 @@ export async function estadoRoutes(app: FastifyInstance) {
     return estado
   })
 
+  app.get('/estadosporformulario/:formularioId', async (request) => {
+    const paramsSchema = z.object({
+      formularioId: z.coerce.number(),
+    })
+
+    const { formularioId } = paramsSchema.parse(request.params)
+
+    const estado = await prisma.estado.findMany({
+      where: {
+        Regional: {
+          some: {
+            Municipio: {
+              some: {
+                Professor: {
+                  some: {
+                    formularios: {
+                      some: {
+                        formularioId,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      distinct: ['id'],
+      select: {
+        id: true,
+        nome: true,
+        sigla: true,
+      },
+    })
+
+    return estado
+  })
+
   app.get('/estados', async () => {
     const estados = await prisma.estado.findMany({
       where: {

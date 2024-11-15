@@ -45,13 +45,20 @@ export async function quantitativo(app: FastifyInstance) {
           municipioId === undefined ? 0 : municipioId
         },${escolaId === undefined ? 0 : escolaId},${
           turmaId === undefined ? 0 : turmaId
-        },${agrupador}`
+        },${agrupador === undefined ? 0 : agrupador}`
       if (turmaId) resultadoAtualizado = atualizarNomes(resultado)
     } else {
       resultado =
         await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador}`
       if (municipioId) resultadoAtualizado = atualizarNomes(resultado)
     }
+    console.log(
+      `exec SP_RelatorioProfessor ${formularioId},${
+        estadoId === undefined ? 0 : estadoId
+      },${regionalId === undefined ? 0 : regionalId},${
+        municipioId === undefined ? 0 : municipioId
+      },${agrupador === undefined ? 0 : agrupador}`,
+    )
     // return `exec SP_RelatorioAluno ${formularioId},${estadoId===undefined ? 0 : estadoId},${regionalId === undefined ? 0 : regionalId},${municipioId === undefined ? 0 : municipioId},${escolaId === undefined ? 0 : escolaId},${turmaId === undefined ? 0 : turmaId},'${agrupador}'`
     return resultadoAtualizado || resultado
   })
