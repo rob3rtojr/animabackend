@@ -31,17 +31,35 @@ export async function estadoRoutes(app: FastifyInstance) {
 
     const { formularioId } = paramsSchema.parse(request.params)
 
-    const estado = await prisma.estado.findMany({
+    const form = await prisma.formulario.findUnique({
       where: {
-        Regional: {
-          some: {
-            Municipio: {
-              some: {
-                Professor: {
-                  some: {
-                    formularios: {
-                      some: {
-                        formularioId,
+        id: formularioId,
+      },
+    })
+
+    let estado
+
+    if (form?.tipo === 'aluno') {
+      estado = await prisma.estado.findMany({
+        where: {
+          Regional: {
+            some: {
+              Municipio: {
+                some: {
+                  Escola: {
+                    some: {
+                      Turma: {
+                        some: {
+                          Aluno: {
+                            some: {
+                              formularios: {
+                                some: {
+                                  formularioId,
+                                },
+                              },
+                            },
+                          },
+                        },
                       },
                     },
                   },
@@ -50,14 +68,42 @@ export async function estadoRoutes(app: FastifyInstance) {
             },
           },
         },
-      },
-      distinct: ['id'],
-      select: {
-        id: true,
-        nome: true,
-        sigla: true,
-      },
-    })
+        distinct: ['id'],
+        select: {
+          id: true,
+          nome: true,
+          sigla: true,
+        },
+      })
+    } else {
+      estado = await prisma.estado.findMany({
+        where: {
+          Regional: {
+            some: {
+              Municipio: {
+                some: {
+                  Professor: {
+                    some: {
+                      formularios: {
+                        some: {
+                          formularioId,
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        distinct: ['id'],
+        select: {
+          id: true,
+          nome: true,
+          sigla: true,
+        },
+      })
+    }
 
     return estado
   })
