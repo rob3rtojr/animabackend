@@ -60,4 +60,24 @@ export async function tipoFormulario(app: FastifyInstance) {
 
     return result
   })
+
+  app.get('/tipoFormulariosNaoAutenticados', async (request) => {
+    const form = await prisma.formulario.findMany({
+      select: {
+        id: true,
+        nome: true,
+        tipo: true,
+      },
+      where: {
+        permiteSemAutenticacao: '1',
+      },
+    })
+
+    const result: any[] = []
+    form.forEach((f) => {
+      result.push({ id: f.id, nome: f.nome + ' - ' + f.tipo, tipo: f.tipo })
+    })
+
+    return result
+  })  
 }
