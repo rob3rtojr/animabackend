@@ -2,8 +2,8 @@
 --select * from formularioaluno where formularioid=4 and alunoid=894988
 --select * from aluno where id = 894988
 --SELECT * FROM FORMULARIO
-declare @formularioId int = 6
-declare @estadoId int = 2
+declare @formularioId int = 3
+declare @estadoId int = 1
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
@@ -51,20 +51,18 @@ where r.estadoId = @estadoId
 and p.formularioId = @formularioId
 and fa.formularioId = @formularioId
 and fa.situacao = 3
---and a.id in (
-
---	select alunoId 
---	from FormularioAluno fa
---	inner join Aluno a on fa.alunoId = a.id
---	inner join Turma t on a.turmaId = t.id
---	inner join Escola e on t.escolaId = e.id
---	inner join Municipio m on e.municipioId = m.id
---	inner join Regional r on m.regionalId = r.id
---	where fa.situacao=3
---	and r.estadoId = @estadoId
---	and fa.formularioId = @formularioId
-
---)
+and a.id in (
+	select alunoId 
+	from FormularioAluno fa
+	inner join Aluno a on fa.alunoId = a.id
+	inner join Turma t on a.turmaId = t.id
+	inner join Escola e on t.escolaId = e.id
+	inner join Municipio m on e.municipioId = m.id
+	inner join Regional r on m.regionalId = r.id
+	where fa.situacao=3
+	and r.estadoId = @estadoId
+	and fa.formularioId = @formularioId
+)
 
 alter table tempResp add resposta varchar(100)
 --alter table tempResp alter column resposta varchar(100)

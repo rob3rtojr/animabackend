@@ -3,8 +3,8 @@
 --select * from ESTADO
 --select * from pergunta where formularioid=5 and numero=36
 --select * from escutar where escutarperguntaid=325
-declare @formularioId int = 7
-declare @estadoId int = 2
+declare @formularioId int = 2
+declare @estadoId int = 1
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
@@ -39,7 +39,7 @@ set @colunas_pivot =
 
 select 
 	rp.professorId,
-	pro.cpf,
+	RIGHT(REPLICATE('0', 11) + pro.cpf, 11) as cpf,
 	pro.nome as professor, 
 	pro.masp,
 	pro.matricula,
@@ -65,18 +65,19 @@ where r.estadoId = @estadoId
 and p.formularioId = @formularioId
 and fp.formularioId = @formularioId
 and fp.situacao = 3
---and pro.id in (
+and pro.id in (
 
---	select top 500 professorId 
---	from Formularioprofessor fp
---	inner join professor pro on fp.professorId = pro.id
---	inner join Municipio m on pro.municipioId = m.id
---	inner join Regional r on m.regionalId = r.id
---	where fp.situacao=3
---	and r.estadoId = @estadoId
---	and fp.formularioId = @formularioId
+	select professorId 
+	from Formularioprofessor fp
+	inner join professor pro on fp.professorId = pro.id
+	inner join Municipio m on pro.municipioId = m.id
+	inner join Regional r on m.regionalId = r.id
+	where fp.situacao=3
+	and r.estadoId = @estadoId
+	and fp.formularioId = @formularioId
 
---)
+)
+--select * from #tempResp where numeropergunta='05'
 
 alter table #tempResp add resposta varchar(100)
 --alter table #tempResp alter column resposta varchar(100)

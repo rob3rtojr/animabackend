@@ -90,7 +90,7 @@ model Aluno {
 model Professor {
   id                Int                   @id @default(autoincrement())
   nome              String                @db.VarChar(200)
-  dataNascimento    String                @db.VarChar(10)
+  dataNascimento    String?               @db.VarChar(10)
   cpf               String?               @db.VarChar(11)
   masp              String?               @db.VarChar(20)
   matricula         String?               @db.VarChar(20)
