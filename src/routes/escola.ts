@@ -61,4 +61,25 @@ export async function escolaRoutes(app: FastifyInstance) {
 
     return escola
   })
+
+  app.get('/escolassa/:municipioSaId', async (request) => {
+    const paramsSchema = z.object({
+      municipioSaId: z.coerce.number(),
+    })
+
+    const { municipioSaId } = paramsSchema.parse(request.params)
+
+    const escola = await prisma.escolaSA.findMany({
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
+      where: {
+        municipioSaId,
+      },
+    })
+
+    return escola
+  })
 }

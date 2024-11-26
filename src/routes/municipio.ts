@@ -28,4 +28,25 @@ export async function municipioRoutes(app: FastifyInstance) {
 
     return municipio
   })
+
+  app.get('/municipiossa/:estadoId', async (request) => {
+    const paramsSchema = z.object({
+      estadoId: z.coerce.number(),
+    })
+
+    const { estadoId } = paramsSchema.parse(request.params)
+
+    const municipio = await prisma.municipioSA.findMany({
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
+      where: {
+        estadoId,
+      },
+    })
+
+    return municipio
+  })
 }

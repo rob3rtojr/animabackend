@@ -22,6 +22,7 @@ model Estado {
 
   Regional         Regional[]
   FormularioEstado FormularioEstado[]
+  MunicipioSA      MunicipioSA[]
 }
 
 model Regional {
@@ -47,6 +48,22 @@ model Municipio {
   regionalId Int
   Escola     Escola[]
   Professor  Professor[]
+  EscolaSA   EscolaSA[]
+}
+
+model MunicipioSA {
+  id       Int    @id
+  nome     String
+  estadoId Int
+  estado   Estado @relation(fields: [estadoId], references: [id])
+}
+
+model EscolaSA {
+  id            Int       @id @default(autoincrement())
+  inep          Int
+  nome          String
+  municipioSaId Int
+  municipioSA   Municipio @relation(fields: [municipioSaId], references: [id])
 }
 
 model Escola {
