@@ -48,22 +48,30 @@ model Municipio {
   regionalId Int
   Escola     Escola[]
   Professor  Professor[]
-  EscolaSA   EscolaSA[]
 }
 
 model MunicipioSA {
-  id       Int    @id
+  id       Int        @id
   nome     String
   estadoId Int
-  estado   Estado @relation(fields: [estadoId], references: [id])
+  estado   Estado     @relation(fields: [estadoId], references: [id])
+  EscolaSA EscolaSA[]
 }
 
 model EscolaSA {
-  id            Int       @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   inep          Int
   nome          String
   municipioSaId Int
-  municipioSA   Municipio @relation(fields: [municipioSaId], references: [id])
+  municipioSA   MunicipioSA @relation(fields: [municipioSaId], references: [id])
+  TurmaSA       TurmaSA[]
+}
+
+model TurmaSA {
+  id         Int      @id @default(autoincrement())
+  nome       String
+  escolaSaId Int
+  escolaSA   EscolaSA @relation(fields: [escolaSaId], references: [id])
 }
 
 model Escola {

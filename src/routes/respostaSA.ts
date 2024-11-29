@@ -9,15 +9,16 @@ export async function respostaSA(app: FastifyInstance) {
       estadoId: z.coerce.number(),
       escolaId: z.coerce.number(),
       municipioId: z.coerce.number(),
+      turmaId: z.string(),
       resposta: z.string(),
       tipo: z.string(),
     })
 
-    const { estadoId, municipioId, escolaId, resposta, tipo } = bodySchema.parse(request.body)
+    const { estadoId, municipioId, escolaId, turmaId, resposta, tipo } = bodySchema.parse(request.body)
 
     try {
       const resultado: any[] =
-        await prisma.$queryRaw`exec SP_GravaRespostaSA @estadoId=${estadoId}, @municipioId=${municipioId}, @escolaId=${escolaId}, @json=${resposta}, @tipo=${tipo}`
+        await prisma.$queryRaw`exec SP_GravaRespostaSA @estadoId=${estadoId}, @municipioId=${municipioId}, @escolaId=${escolaId}, @turmaId=${turmaId === '' ? 0 : parseInt(turmaId,10)}, @json=${resposta}, @tipo=${tipo}`
 
       const { Success, Message } = resultado[0] || {
         Success: 0,

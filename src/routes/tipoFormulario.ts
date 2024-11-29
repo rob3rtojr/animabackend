@@ -79,5 +79,5 @@ export async function tipoFormulario(app: FastifyInstance) {
     })
 
     return result
-  })  
+  })
 }

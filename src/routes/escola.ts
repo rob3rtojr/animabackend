@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { FastifyInstance } from 'fastify'
 import { z } from 'zod'
 import { prisma } from '../lib/prisma'
@@ -66,20 +67,40 @@ export async function escolaRoutes(app: FastifyInstance) {
     const paramsSchema = z.object({
       municipioSaId: z.coerce.number(),
     })
-
-    const { municipioSaId } = paramsSchema.parse(request.params)
-
-    const escola = await prisma.escolaSA.findMany({
-      orderBy: [
-        {
-          nome: 'asc',
-        },
-      ],
-      where: {
-        municipioSaId,
-      },
+    const querySchema = z.object({
+      possuiTurma: z.string().optional(),
     })
+    let escola
+    const { municipioSaId } = paramsSchema.parse(request.params)
+    const { possuiTurma } = querySchema.parse(request.query)
 
+    if (possuiTurma === 'S') {
+      escola = await prisma.escolaSA.findMany({
+        where: {
+          TurmaSA: {
+            some: {}, // Verifica se existe ao menos uma turma associada
+          },
+          municipioSaId
+        },
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],        
+      });
+
+    } else {
+      escola = await prisma.escolaSA.findMany({
+        orderBy: [
+          {
+            nome: 'asc',
+          },
+        ],
+        where: {
+          municipioSaId,
+        },
+      })
+    }
     return escola
   })
 }

@@ -23,4 +23,45 @@ export async function turmaRoutes(app: FastifyInstance) {
 
     return turma
   })
+
+  app.get('/turmassa/:escolaSaId', async (request) => {
+    const paramsSchema = z.object({
+      escolaSaId: z.coerce.number(),
+    })
+
+    const { escolaSaId } = paramsSchema.parse(request.params)
+
+    const turma = await prisma.turmaSA.findMany({
+      orderBy: [
+        {
+          nome: 'asc',
+        },
+      ],
+      where: {
+        escolaSaId,
+      },
+    })
+
+    return turma
+  })
+
+  app.get('/total-turmassa/:estadoId', async (request) => {
+    const paramsSchema = z.object({
+      estadoId: z.coerce.number(),
+    })
+
+    const { estadoId } = paramsSchema.parse(request.params)
+
+    const totalTurmas = await prisma.turmaSA.count({
+      where: {
+        escolaSA: {
+          municipioSA: {
+            estadoId, // Filtro pelo estado
+          },
+        },
+      },
+    })
+
+    return totalTurmas
+  })
 }
