@@ -87,15 +87,15 @@ export async function quantitativo(app: FastifyInstance) {
     const result: QueryResult[] = await prisma.$queryRaw<QueryResult[]>`
       SELECT 
         e.id, e.sigla, e.nome,
-        FORMAT(a.createdAt, 'dd/MM/yyyy') AS createdAt, 
+        FORMAT(a.createdAt, 'yyyy/MM/dd') AS createdAt, 
         COUNT(DISTINCT a.id) AS count
       FROM alunosa a
       INNER JOIN estado e ON a.estadoId = e.id
       INNER JOIN respostaalunosa r ON r.alunoSAId = a.id
       INNER JOIN pergunta p ON r.perguntaId = p.id
       WHERE p.formularioId = ${formularioId}
-      GROUP BY e.id, e.sigla, e.nome, FORMAT(a.createdAt, 'dd/MM/yyyy')
-      order by FORMAT(a.createdAt, 'dd/MM/yyyy')
+      GROUP BY e.id, e.sigla, e.nome, FORMAT(a.createdAt, 'yyyy/MM/dd')
+      order by FORMAT(a.createdAt, 'yyyy/MM/dd')
     `
 
     const formattedResult: FormattedResult[] = result.reduce(
