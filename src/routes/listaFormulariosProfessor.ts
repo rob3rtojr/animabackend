@@ -15,6 +15,7 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
     const formularios = await prisma.formularioProfessor.findMany({
       where: {
         professorId,
+        formularioAtivo: '1',
       },
       select: {
         situacao: true,
