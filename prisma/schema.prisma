@@ -20,9 +20,10 @@ model Estado {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
 
-  Regional         Regional[]
-  FormularioEstado FormularioEstado[]
-  MunicipioSA      MunicipioSA[]
+  Regional             Regional[]
+  FormularioEstado     FormularioEstado[]
+  MunicipioSA          MunicipioSA[]
+  PeriodoPreenchimento PeriodoPreenchimento[]
 }
 
 model Regional {
@@ -159,17 +160,18 @@ model FormularioProfessor {
 }
 
 model Formulario {
-  id                     Int                   @id @default(autoincrement())
-  nome                   String                @db.VarChar(100)
-  tipo                   String                @db.VarChar(10)
+  id                     Int                    @id @default(autoincrement())
+  nome                   String                 @db.VarChar(100)
+  tipo                   String                 @db.VarChar(10)
   FormularioEstado       FormularioEstado[]
   Pergunta               Pergunta[]
   alunos                 FormularioAluno[]
   professores            FormularioProfessor[]
   termo                  String?
-  duracao                String?               @db.VarChar(20)
+  duracao                String?                @db.VarChar(20)
   meta                   Int?
-  permiteSemAutenticacao String                @db.Char(1)
+  permiteSemAutenticacao String                 @db.Char(1)
+  PeriodoPreenchimento   PeriodoPreenchimento[]
 }
 
 model FormularioEstado {
@@ -250,4 +252,14 @@ model RespostaProfessor {
   professorId Int
 
   @@id([perguntaId, professorId])
+}
+
+model PeriodoPreenchimento {
+  dataFinal    DateTime?  @default(now())
+  formulario   Formulario @relation(fields: [formularioId], references: [id])
+  formularioId Int
+  estado       Estado     @relation(fields: [estadoId], references: [id])
+  estadoId     Int
+
+  @@id([estadoId, formularioId])
 }

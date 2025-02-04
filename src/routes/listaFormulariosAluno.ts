@@ -11,11 +11,40 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
     })
 
     const { alunoId } = paramSchema.parse(request.params)
+    const dataAtual = new Date()
+
+    const estadoAluno = await prisma.aluno.findUnique({
+      where: { id: alunoId },
+      select: {
+        turma: {
+          select: {
+            escola: {
+              select: {
+                municipio: {
+                  select: {
+                    regional: {
+                      select: {
+                        estado: {
+                          select: {
+                            id: true,
+                            nome: true,
+                            sigla: true,
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    })
 
     const formularios = await prisma.formularioAluno.findMany({
       where: {
         alunoId,
-        formularioAtivo: '1',
       },
       select: {
         situacao: true,
@@ -30,6 +59,23 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
       },
     })
 
-    return formularios
+    // Filtra apenas os formularios que atendem os critérios na tabela PeriodoPreenchimento
+    const formulariosFiltrados = await Promise.all(
+      formularios.map(async (form) => {
+        const periodoExiste = await prisma.periodoPreenchimento.findFirst({
+          where: {
+            formularioId: form.formulario.id,
+            estadoId: estadoAluno?.turma.escola.municipio.regional.estado.id,
+            dataFinal: {
+              gt: dataAtual, // dataFinal > data atual
+            },
+          },
+        })
+
+        return periodoExiste ? form : null
+      }),
+    )
+
+    return formulariosFiltrados.filter(Boolean)
   })
 }
