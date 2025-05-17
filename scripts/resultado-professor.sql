@@ -3,8 +3,8 @@
 --select * from ESTADO
 --select * from pergunta where formularioid=5 and numero=36
 --select * from escutar where escutarperguntaid=325
-declare @formularioId int = 2
-declare @estadoId int = 1
+declare @formularioId int = 6
+declare @estadoId int = 8
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
@@ -59,8 +59,8 @@ inner join professor pro on rp.professorId = pro.id
 inner join Municipio m on pro.municipioId = m.id
 inner join Regional r on m.regionalId = r.id
 inner join Formularioprofessor fp on rp.professorId = fp.professorId
-inner join professorEscola pe on pro.id = pe.professorId
-inner join Escola e on pe.escolaid = e.id
+left join professorEscola pe on pro.id = pe.professorId
+left join Escola e on pe.escolaid = e.id
 where r.estadoId = @estadoId
 and p.formularioId = @formularioId
 and fp.formularioId = @formularioId
@@ -108,8 +108,6 @@ set r.resposta = r.descricao
 from #tempResp R 
 where r.tipoPerguntaId in (3,5)
 
-
-
 set @comando_sql = '
 		select * from(
 
@@ -137,98 +135,29 @@ set @comando_sql = '
 execute(@comando_sql)
 go
 
-------------------------------------------
---drop table #tempResp
---drop table #tempRespA
+--SELECT * FROM TEMPRESPPROFESSOR WHERE [17] IS NULL
 
-			--select rp.professorId, p.nome as professor , t.nome as turna, e.nome as escola, m.nome as municipio, r.nome as regional, e.nome as estado, rp.perguntaId, rp.descricao, p.tipoPerguntaId
-			----into #tempResp
-			--from RespostaProfessor rp
-			--inner join Pergunta p on rp.perguntaId = p.id
-			--inner join professor p on rp.professorId = p.id
-			--inner join Turma t on p.turmaId = t.id
-			--inner join Escola e on t.escolaId = e.id
-			--inner join Municipio m on e.municipioId = m.id
-			--inner join Regional r on m.regionalId = r.id
-			--where r.estadoId = 2
-			--and p.formularioId = 4
-			--and p.id = 212
-
---			alter table #tempResp add resposta varchar(max)
-
---			update t 
---			set t.resposta = p.numero
---			from #tempResp t inner join Alternativa a on p.id = cast(t.descricao as int)
---			where t.tipoPerguntaId =1
---			--select * from tipopergunta
---			select * from #tempResp
-
---			--update t 
---			--set t.resposta = p.numero
---			--from #tempResp t inner join Alternativa a on p.id = cast(t.descricao as int)
---			--where t.tipoPerguntaId =2
---			----select * from tipopergunta
---			--select * from #tempResp
-
-----SELECT R.perguntaId, p.numero
-----FROM #tempResp R
-----CROSS APPLY STRING_SPLIT(R.descricao, ',') AS SplitDesc
-----JOIN Alternativa A ON SplitDesc.value = CAST(p.id AS NVARCHAR(MAX))
-----where r.tipoPerguntaId = 2
-
---SELECT R.perguntaId, STRING_AGG(p.numero, '|') AS numeros_alternativas
---into #tempRespA
---FROM #tempResp R
---CROSS APPLY STRING_SPLIT(R.descricao, ',') AS SplitDesc
---JOIN Alternativa A ON SplitDesc.value = CAST(p.id AS NVARCHAR(MAX))
---where r.tipoPerguntaId = 2
---GROUP BY R.perguntaId
-
---select * from #tempRespA
---select * from #tempResp
-
---update r
---set r.resposta = rp.numeros_alternativas
-----select r.resposta, rp.numeros_alternativas
---from #tempResp R 
---inner join #tempRespA rp on rp.perguntaId = r.perguntaId
-
-
---select * from #tempResp
-
-----SELECT Value FROM STRING_SPLIT('Lorem ipsum dolor sit amet.', ' ');
-
-----SELECT value
-----FROM RespostaProfessor rp
-----CROSS APPLY STRING_SPLIT(rp.descricao, ',') 
-----where rp.perguntaid = 186
-----and rp.professorid = 212
-
-----select * from Pergunta where tipoPerguntaId = 2
-----select * from Alternativa where perguntaId = 186
-
-----select * from TipoPergunta
-
-
-----select STRING_SPLIT(descricao,',') from RespostaProfessor
-----where perguntaid = 186
-----and professorid = 212
+--select *, '0'+numero as new from Pergunta where len(numero) = 1
+--begin tran
+--update Pergunta 
+--set numero = '0'+numero
+--where len(numero) = 1
+----commit
 --------------------------------------------
+----drop table #tempResp
+----drop table #tempRespA
 
-----select * from formularioprofessor 
-----where professorid = 212
-----and formularioid = 4
 
-----begin tran
-----update formularioprofessor set situacao=3
-----where professorid = 212
-----and formularioid = 4
-------commit
-------rollback
 
-----select * from professor where id = 212
-----select * from turma where id = 1225
-----select * from escola where id=4067
-----select * from municipio  where id = 745
+--select * from 
+--Pergunta p 
+--left join #tempResp T on p.id = t.perguntaId
+--where professorId = 57028
 
-------select * from formularioprofessor where situacao=3
+--select * from pergunta P INNER JOIN Alternativa A ON A.perguntaId = P.ID 
+--where formularioId = 8 AND P.NUMERO = 7
+
+
+--select * from escutar where perguntaId in (663)
+--SELECT * FROM Alternativa WHERE perguntaId = 758
+--SELECT * FROM PERGUNTA WHERE ID = 758

@@ -123,6 +123,8 @@ model Professor {
   possuiFormulario  String?               @db.Char(1)
   nomeRegional      String?               @db.VarChar(80)
   municipio         Municipio             @relation(fields: [municipioId], references: [id])
+  celular           String?               @db.VarChar(11)
+  email             String?               @db.VarChar(150)
   municipioId       Int
   formularios       FormularioProfessor[]
   RespostaProfessor RespostaProfessor[]
@@ -194,6 +196,7 @@ model Pergunta {
   id                Int                 @id @default(autoincrement())
   descricao         String
   numero            String              @db.VarChar(5)
+  numeroComplemento String?             @db.VarChar(5)
   ordem             Int
   tipoPergunta      TipoPergunta        @relation(fields: [tipoPerguntaId], references: [id])
   tipoPerguntaId    Int
@@ -203,6 +206,8 @@ model Pergunta {
   step              Int?
   mascaraResposta   String?             @db.VarChar(30)
   bloco             Int
+  identificador     String?             @db.VarChar(6)
+  descricaoAuxiliar String?
   formulario        Formulario          @relation(fields: [formularioId], references: [id])
   formularioId      Int
   respostaAluno     RespostaAluno[]

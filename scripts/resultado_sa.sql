@@ -11,36 +11,42 @@ declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
 
 IF OBJECT_ID('tempdb..#tempPergunta') IS NOT NULL DROP TABLE #tempPergunta
-IF OBJECT_ID('tempResp') IS NOT NULL DROP TABLE tempResp
+IF OBJECT_ID('tempdb..#tempResp') IS NOT NULL DROP TABLE #tempResp
 IF OBJECT_ID('tempdb..#tempRespMultipla') IS NOT NULL DROP TABLE #tempRespMultipla
 
 --drop table tempResp
 select 
 	ra.alunoSaId,
+	m.nome as municipio,
+	e.nome as escola,
+	t.nome as turma,
 	p.numero as numeroPergunta, 
 	ra.perguntaId, 
 	ra.descricao, 
 	p.tipoPerguntaId
-into tempResp
+into #tempResp
 from RespostaAlunoSa ra
 inner join Pergunta p on ra.perguntaId = p.id
 inner join AlunoSa a on ra.alunosaId = a.id
+left join MunicipioSA m on a.municipioId = m.id
+left join EscolaSA e on a.escolaId = e.id
+left join TurmaSA t on a.turmaId = t.id
 where a.estadoId = @estadoId
 and p.formularioId = @formularioId
 
-alter table tempResp add resposta varchar(100)
+alter table #tempResp add resposta varchar(100)
 --alter table tempResp alter column resposta varchar(100)
 --ATUALIZA AS RESPOSTAS DE UNICA ESCOLHA
 update t 
 set t.resposta = a.numero
-from tempResp t inner join Alternativa a on a.id = cast(t.descricao as int)
+from #tempResp t inner join Alternativa a on a.id = cast(t.descricao as int)
 where t.tipoPerguntaId =1
 
 --ATUALIZA AS RESPOSTAS DE MULTIPLA ESCOLHA
 --select * from #tempRespMultipla
 SELECT R.alunoSaId, R.perguntaId, STRING_AGG(A.numero, '|') AS numeros_alternativas
 into #tempRespMultipla
-FROM tempResp R
+FROM #tempResp R
 CROSS APPLY STRING_SPLIT(R.descricao, ',') AS SplitDesc
 JOIN Alternativa A ON SplitDesc.value = CAST(A.id AS NVARCHAR(MAX))
 where r.tipoPerguntaId = 2
@@ -48,13 +54,13 @@ GROUP BY R.alunoSaId, R.perguntaId
 
 update r
 set r.resposta = ra.numeros_alternativas
-from tempResp R 
+from #tempResp R 
 inner join #tempRespMultipla ra on ra.perguntaId = r.perguntaId
 and ra.alunosaId = r.alunosaId
 -------------
 update r
 set r.resposta = r.descricao
-from tempResp R 
+from #tempResp R 
 where r.tipoPerguntaId in (3,5)
 
 -----|CORREÇÕES
@@ -111,9 +117,12 @@ set @comando_sql = '
 
 			select 
 			ra.alunosaId, 
+			ra.municipio,
+			ra.escola,
+			ra.turma,
 			ra.resposta, 
 			ra.numeroPergunta
-			from tempResp ra
+			from #tempResp ra
 			inner join Pergunta p on ra.perguntaId = p.id
 			where formularioId = ' + cast(@formularioId as varchar) + '
 
@@ -126,4 +135,4 @@ go
 --drop table tempResp
 --drop table #tempRespA
 
---select * from tempResp
+--select * from ALUNOSA WHERE ESTADOID = 8
