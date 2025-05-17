@@ -159,7 +159,7 @@ export async function authRotes(app: FastifyInstance) {
       }
 
       if (email !== '') {
-        if (userProfessor?.email === email) {
+        if (userProfessor?.email?.toLowerCase() === email.toLowerCase()) {
           userExists = true
         }
       }
