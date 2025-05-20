@@ -163,7 +163,7 @@ model FormularioProfessor {
 
 model Formulario {
   id                     Int                    @id @default(autoincrement())
-  nome                   String                 @db.VarChar(100)
+  nome                   String                 @db.VarChar(250)
   tipo                   String                 @db.VarChar(10)
   FormularioEstado       FormularioEstado[]
   Pergunta               Pergunta[]
