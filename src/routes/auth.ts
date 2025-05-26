@@ -53,14 +53,10 @@ export async function authRotes(app: FastifyInstance) {
                 include: {
                   municipio: {
                     include: {
-                      regional: {
-                        include: {
-                          estado: {
-                            select: {
-                              id: true,
-                              sigla: true,
-                            },
-                          },
+                      estado: {
+                        select: {
+                          id: true,
+                          sigla: true,
                         },
                       },
                     },
@@ -107,7 +103,7 @@ export async function authRotes(app: FastifyInstance) {
         userName = userAluno ? userAluno.nome : ''
         userId = userAluno ? userAluno.id : 0
         siglaEstado = userAluno
-          ? userAluno.turma.escola.municipio.regional.estado.sigla
+          ? userAluno.turma.escola.municipio.estado.sigla
           : ''
       }
     } else {
@@ -118,14 +114,10 @@ export async function authRotes(app: FastifyInstance) {
         include: {
           municipio: {
             include: {
-              regional: {
-                include: {
-                  estado: {
-                    select: {
-                      id: true,
-                      sigla: true,
-                    },
-                  },
+              estado: {
+                select: {
+                  id: true,
+                  sigla: true,
                 },
               },
             },
@@ -173,9 +165,7 @@ export async function authRotes(app: FastifyInstance) {
       if (userExists) {
         userName = userProfessor ? userProfessor.nome : ''
         userId = userProfessor ? userProfessor.id : 0
-        siglaEstado = userProfessor
-          ? userProfessor.municipio.regional.estado.sigla
-          : ''
+        siglaEstado = userProfessor ? userProfessor.municipio.estado.sigla : ''
       }
     }
 

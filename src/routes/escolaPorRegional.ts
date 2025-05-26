@@ -17,9 +17,7 @@ export async function escolaPorRegionalRoutes(app: FastifyInstance) {
         },
       ],
       where: {
-        municipio: {
-          regionalId,
-        },
+        regionalId,
       },
       select: {
         id: true,

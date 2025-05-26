@@ -32,12 +32,11 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
           },
         ],
         where: {
-          regional: {
-            estado: {
-              id: estadoId,
-              situacao: 'A',
-            },
+          estado: {
+            id: estadoId,
+            situacao: 'A',
           },
+
           Escola: {
             some: {
               Turma: {
@@ -59,12 +58,11 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
           },
         ],
         where: {
-          regional: {
-            estado: {
-              id: estadoId,
-              situacao: 'A',
-            },
+          estado: {
+            id: estadoId,
+            situacao: 'A',
           },
+
           Professor: {
             some: {},
           },
@@ -83,11 +81,9 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
           },
         ],
         where: {
-          regional: {
-            estado: {
-              id: estadoId,
-              situacao: 'A',
-            },
+          estado: {
+            id: estadoId,
+            situacao: 'A',
           },
         },
         select: {

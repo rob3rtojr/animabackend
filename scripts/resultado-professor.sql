@@ -3,8 +3,8 @@
 --select * from ESTADO
 --select * from pergunta where formularioid=5 and numero=36
 --select * from escutar where escutarperguntaid=325
-declare @formularioId int = 6
-declare @estadoId int = 8
+declare @formularioId int = 10
+declare @estadoId int = 7
 
 declare @colunas_pivot as nvarchar(max)
 declare @comando_sql  as nvarchar(max)
@@ -14,13 +14,13 @@ IF OBJECT_ID('tempdb..#tempResp') IS NOT NULL DROP TABLE #tempResp
 IF OBJECT_ID('tempdb..#tempRespMultipla') IS NOT NULL DROP TABLE #tempRespMultipla
 
 
-select numero
+select identificador as numero
 into #tempPergunta
 from pergunta
 where formularioId = @formularioId
 and tipoPerguntaId <> 4
-order by ordem
-
+order by identificador
+--select * from #tempPergunta
 --select id, numero, ordem
 --from pergunta
 --where formularioId = @formularioId
@@ -32,10 +32,9 @@ set @colunas_pivot =
             distinct ',' + quotename(numero,'[]')  
 			from #tempPergunta 
 			--where formularioId = @formularioId
-			--order by ',' + quotename(id,'[]') 
+			--order by 1
 			for xml path('')
 	), 1, 1, '')
-
 
 select 
 	rp.professorId,
@@ -47,8 +46,8 @@ select
 	e.codigoMec as inep,
 	e.nome as escola, 
 	m.nome as municipio, 
-	r.nome as regional, 
-	p.numero as numeroPergunta, 
+	e.nomeRegional as regional, 
+	p.identificador as numeroPergunta, 
 	rp.perguntaId, 
 	rp.descricao, 
 	p.tipoPerguntaId
@@ -57,11 +56,11 @@ from RespostaProfessor rp
 inner join Pergunta p on rp.perguntaId = p.id
 inner join professor pro on rp.professorId = pro.id
 inner join Municipio m on pro.municipioId = m.id
-inner join Regional r on m.regionalId = r.id
+--inner join Regional r on m.regionalId = r.id
 inner join Formularioprofessor fp on rp.professorId = fp.professorId
 left join professorEscola pe on pro.id = pe.professorId
 left join Escola e on pe.escolaid = e.id
-where r.estadoId = @estadoId
+where m.estadoId = @estadoId
 and p.formularioId = @formularioId
 and fp.formularioId = @formularioId
 and fp.situacao = 3
@@ -71,9 +70,9 @@ and pro.id in (
 	from Formularioprofessor fp
 	inner join professor pro on fp.professorId = pro.id
 	inner join Municipio m on pro.municipioId = m.id
-	inner join Regional r on m.regionalId = r.id
+	--inner join Regional r on m.regionalId = r.id
 	where fp.situacao=3
-	and r.estadoId = @estadoId
+	and m.estadoId = @estadoId
 	and fp.formularioId = @formularioId
 
 )

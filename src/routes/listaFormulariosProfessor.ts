@@ -18,15 +18,11 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
       select: {
         municipio: {
           select: {
-            regional: {
+            estado: {
               select: {
-                estado: {
-                  select: {
-                    id: true,
-                    nome: true,
-                    sigla: true,
-                  },
-                },
+                id: true,
+                nome: true,
+                sigla: true,
               },
             },
           },
@@ -57,7 +53,7 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
         const periodoExiste = await prisma.periodoPreenchimento.findFirst({
           where: {
             formularioId: form.formulario.id,
-            estadoId: estadoProfessor?.municipio.regional.estado.id,
+            estadoId: estadoProfessor?.municipio.estado.id,
             dataFinal: {
               gt: dataAtual, // dataFinal > data atual
             },

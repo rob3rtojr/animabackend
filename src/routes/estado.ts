@@ -42,21 +42,19 @@ export async function estadoRoutes(app: FastifyInstance) {
     if (form?.tipo === 'aluno') {
       estado = await prisma.estado.findMany({
         where: {
-          Regional: {
+          // Regional: {
+          //  some: {
+          Municipio: {
             some: {
-              Municipio: {
+              Escola: {
                 some: {
-                  Escola: {
+                  Turma: {
                     some: {
-                      Turma: {
+                      Aluno: {
                         some: {
-                          Aluno: {
+                          formularios: {
                             some: {
-                              formularios: {
-                                some: {
-                                  formularioId,
-                                },
-                              },
+                              formularioId,
                             },
                           },
                         },
@@ -67,6 +65,8 @@ export async function estadoRoutes(app: FastifyInstance) {
               },
             },
           },
+          // },
+          // },
         },
         distinct: ['id'],
         select: {
@@ -78,23 +78,23 @@ export async function estadoRoutes(app: FastifyInstance) {
     } else {
       estado = await prisma.estado.findMany({
         where: {
-          Regional: {
+          // Regional: {
+          // some: {
+          Municipio: {
             some: {
-              Municipio: {
+              Professor: {
                 some: {
-                  Professor: {
+                  formularios: {
                     some: {
-                      formularios: {
-                        some: {
-                          formularioId,
-                        },
-                      },
+                      formularioId,
                     },
                   },
                 },
               },
             },
           },
+          // },
+          // },
         },
         distinct: ['id'],
         select: {

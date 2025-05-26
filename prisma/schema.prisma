@@ -24,6 +24,7 @@ model Estado {
   FormularioEstado     FormularioEstado[]
   MunicipioSA          MunicipioSA[]
   PeriodoPreenchimento PeriodoPreenchimento[]
+  Municipio            Municipio[]
 }
 
 model Regional {
@@ -34,8 +35,8 @@ model Regional {
 
   estado Estado @relation(fields: [estadoId], references: [id])
 
-  estadoId  Int
-  Municipio Municipio[]
+  estadoId Int
+  Escola   Escola[]
 }
 
 model Municipio {
@@ -44,11 +45,14 @@ model Municipio {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @default(now())
 
-  regional Regional @relation(fields: [regionalId], references: [id])
+  // regional Regional @relation(fields: [regionalId], references: [id])
 
-  regionalId Int
-  Escola     Escola[]
-  Professor  Professor[]
+  // regionalId Int
+  estado   Estado @relation(fields: [estadoId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  estadoId Int
+
+  Escola    Escola[]
+  Professor Professor[]
 }
 
 model MunicipioSA {
@@ -82,8 +86,10 @@ model Escola {
   nomeRegional    String?           @db.VarChar(80)
   createdAt       DateTime?         @default(now())
   updatedAt       DateTime?         @default(now())
-  municipio       Municipio         @relation(fields: [municipioId], references: [id])
+  municipio       Municipio         @relation(fields: [municipioId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   municipioId     Int
+  regional        Regional?         @relation(fields: [regionalId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  regionalId      Int?
   Turma           Turma[]
   ProfessorEscola ProfessorEscola[]
 }
@@ -126,6 +132,8 @@ model Professor {
   celular           String?               @db.VarChar(11)
   email             String?               @db.VarChar(150)
   municipioId       Int
+  grupo             String?               @db.VarChar(50)
+  estrato           String?               @db.VarChar(50)
   formularios       FormularioProfessor[]
   RespostaProfessor RespostaProfessor[]
   ProfessorEscola   ProfessorEscola[]
