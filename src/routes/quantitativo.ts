@@ -37,11 +37,21 @@ export async function quantitativo(app: FastifyInstance) {
       escolaId: z.coerce.number().optional(),
       turmaId: z.coerce.number().optional(),
       agrupador: z.string().optional(),
+      grupo: z.string().optional(),
+      estrato: z.string().optional(),
     })
 
     const { formularioId } = paramsSchema.parse(request.params)
-    const { estadoId, regionalId, municipioId, escolaId, turmaId, agrupador } =
-      querySchema.parse(request.query)
+    const {
+      estadoId,
+      regionalId,
+      municipioId,
+      escolaId,
+      turmaId,
+      agrupador,
+      grupo,
+      estrato,
+    } = querySchema.parse(request.query)
 
     // consulta o tipo do formulário
     const formulario = await prisma.formulario.findUnique({
@@ -71,11 +81,12 @@ export async function quantitativo(app: FastifyInstance) {
       if (turmaId) resultadoAtualizado = atualizarNomes(resultado)
     } else {
       resultado =
-        await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador}`
+        await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador},${grupo}, ${estrato}`
       if (municipioId) resultadoAtualizado = atualizarNomes(resultado)
     }
-
-    // return `exec SP_RelatorioAluno ${formularioId},${estadoId===undefined ? 0 : estadoId},${regionalId === undefined ? 0 : regionalId},${municipioId === undefined ? 0 : municipioId},${escolaId === undefined ? 0 : escolaId},${turmaId === undefined ? 0 : turmaId},'${agrupador}'`
+    console.log(
+      `exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador},${grupo}, ${estrato}`,
+    )
     return resultadoAtualizado || resultado
   })
 
