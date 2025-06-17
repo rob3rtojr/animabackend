@@ -39,7 +39,7 @@ export async function authRotes(app: FastifyInstance) {
     let userId = 0
     // const estadoId = 0
     let siglaEstado = ''
-    console.log('celular', celular)
+    // console.log('celular', celular)
     // AUTENTICAÇÃO DE ALUNO
     if (userType === 'aluno') {
       const userAluno = await prisma.aluno.findUnique({
@@ -128,36 +128,38 @@ export async function authRotes(app: FastifyInstance) {
       // estadoId = userProfessor ? userProfessor.municipio.regional.estadoId : 0
 
       if (cpf !== '') {
-        if (userProfessor?.cpf === removerCaracteres(cpf)) {
+        if (userProfessor?.cpf === removerCaracteres(cpf.trim())) {
           userExists = true
         }
       }
 
       if (dataNascimento !== '') {
-        if (userProfessor?.dataNascimento === dataNascimento) {
+        if (userProfessor?.dataNascimento === dataNascimento.trim()) {
           userExists = true
         }
       }
 
       if (masp !== '') {
-        if (userProfessor?.masp === removerCaracteres(masp)) {
+        if (userProfessor?.masp === removerCaracteres(masp.trim())) {
           userExists = true
         }
       }
       if (matriculaProfessor !== '') {
-        if (userProfessor?.matricula === matriculaProfessor) {
+        if (userProfessor?.matricula === matriculaProfessor.trim()) {
           userExists = true
         }
       }
 
       if (email !== '') {
-        if (userProfessor?.email?.toLowerCase() === email.toLowerCase()) {
+        if (
+          userProfessor?.email?.toLowerCase() === email.toLowerCase().trim()
+        ) {
           userExists = true
         }
       }
 
       if (celular !== '') {
-        if (userProfessor?.celular === celular) {
+        if (userProfessor?.celular === celular.trim()) {
           userExists = true
         }
       }
