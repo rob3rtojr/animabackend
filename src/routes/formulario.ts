@@ -37,6 +37,7 @@ export async function formulario(app: FastifyInstance) {
       return res.status(401).send([])
     }
 
+    // try {
     const formulario = await prisma.pergunta.findMany({
       orderBy: [
         {
@@ -48,6 +49,7 @@ export async function formulario(app: FastifyInstance) {
       ],
       where: {
         formularioId: id,
+        grupo: null,
       },
       include: {
         alternativa: {
@@ -63,6 +65,66 @@ export async function formulario(app: FastifyInstance) {
           },
         },
       },
+    })
+
+    console.log(id)
+
+    const perguntasGrupo = await prisma.perguntaGrupoAluno.findMany({
+      where: {
+        alunoId: pessoaId, // Substitua `pessoaId` pelo id do aluno que você está procurando
+        pergunta: {
+          formularioId: id,
+        },
+      },
+    })
+
+    // Criando um array com os valores de perguntaId
+    const perguntaIds = perguntasGrupo.map((item) => item.perguntaId)
+
+    const formularioPerguntasGrupo = await prisma.pergunta.findMany({
+      orderBy: [
+        {
+          ordem: 'asc',
+        },
+        {
+          id: 'asc',
+        },
+      ],
+      where: {
+        formularioId: id,
+        id: {
+          in: perguntaIds, // Filtro pelas perguntas que estão no array de IDs
+        },
+      },
+      include: {
+        alternativa: {
+          select: {
+            id: true,
+            descricao: true,
+          },
+        },
+        escutar: {
+          select: {
+            escutarPerguntaId: true,
+            escutarAlternativaId: true,
+          },
+        },
+      },
+    })
+
+    const todasPerguntasSemOrdenacao = [
+      ...formulario,
+      ...formularioPerguntasGrupo,
+    ]
+    // Ordenar pelo campo "ordem" e "id"
+    const todasPerguntas = todasPerguntasSemOrdenacao.sort((a, b) => {
+      // Primeiro, compara o campo "ordem"
+      if (a.ordem !== b.ordem) {
+        return a.ordem - b.ordem // Ordem crescente
+      }
+
+      // Se "ordem" for igual, compara pelo campo "id"
+      return a.id - b.id // Ordem crescente
     })
 
     let respostaAluno: any[] = []
@@ -98,9 +160,9 @@ export async function formulario(app: FastifyInstance) {
       return objetos.filter((objeto) => objeto.perguntaId === perguntaId)
     }
 
-    const formularioComResposta = [...formulario]
+    const formularioComResposta = [...todasPerguntas]
 
-    formulario.forEach((f, index) => {
+    todasPerguntas.forEach((f, index) => {
       let respostaPergunta: string[] = []
       const alternativa = [...f.alternativa]
 

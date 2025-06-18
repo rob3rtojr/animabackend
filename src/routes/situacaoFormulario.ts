@@ -18,17 +18,19 @@ export async function situacaoFormulario(app: FastifyInstance) {
     )
     let form
     if (tipo === 'aluno') {
-      form = await prisma.formularioAluno.update({
-        where: {
-          alunoId_formularioId: {
-            alunoId: pessoaId,
-            formularioId,
-          },
-        },
-        data: {
-          situacao,
-        },
-      })
+      form =
+        await prisma.$queryRaw`exec SP_IniciaFormularioAluno ${pessoaId},${formularioId},${tipo},${situacao}`
+      // form = await prisma.formularioAluno.update({
+      //   where: {
+      //     alunoId_formularioId: {
+      //       alunoId: pessoaId,
+      //       formularioId,
+      //     },
+      //   },
+      //   data: {
+      //     situacao,
+      //   },
+      // })
     } else if (tipo === 'professor') {
       form = await prisma.formularioProfessor.update({
         where: {

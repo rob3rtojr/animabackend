@@ -22,17 +22,17 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
               select: {
                 municipio: {
                   select: {
-                    regional: {
+                    // regional: {
+                    // select: {
+                    estado: {
                       select: {
-                        estado: {
-                          select: {
-                            id: true,
-                            nome: true,
-                            sigla: true,
-                          },
-                        },
+                        id: true,
+                        nome: true,
+                        sigla: true,
                       },
                     },
+                    // },
+                    // },
                   },
                 },
               },
@@ -65,7 +65,7 @@ export async function listaFormulariosAluno(app: FastifyInstance) {
         const periodoExiste = await prisma.periodoPreenchimento.findFirst({
           where: {
             formularioId: form.formulario.id,
-            estadoId: estadoAluno?.turma.escola.municipio.regional.estado.id,
+            estadoId: estadoAluno?.turma.escola.municipio.estado.id,
             dataFinal: {
               gt: dataAtual, // dataFinal > data atual
             },

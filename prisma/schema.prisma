@@ -106,17 +106,18 @@ model Turma {
 }
 
 model Aluno {
-  id               Int               @id @default(autoincrement())
-  nome             String            @db.VarChar(200)
-  dataNascimento   String            @db.VarChar(10)
-  matricula        String            @db.VarChar(50)
-  nomeMae          String            @db.VarChar(200)
-  cpf              String?           @db.VarChar(11)
-  possuiFormulario String?           @db.Char(1)
-  turma            Turma             @relation(fields: [turmaId], references: [id])
-  turmaId          Int
-  RespostaAluno    RespostaAluno[]
-  formularios      FormularioAluno[]
+  id                 Int                  @id @default(autoincrement())
+  nome               String               @db.VarChar(200)
+  dataNascimento     String               @db.VarChar(10)
+  matricula          String               @db.VarChar(50)
+  nomeMae            String               @db.VarChar(200)
+  cpf                String?              @db.VarChar(11)
+  possuiFormulario   String?              @db.Char(1)
+  turma              Turma                @relation(fields: [turmaId], references: [id])
+  turmaId            Int
+  RespostaAluno      RespostaAluno[]
+  formularios        FormularioAluno[]
+  PerguntaGrupoAluno PerguntaGrupoAluno[]
 }
 
 model Professor {
@@ -201,27 +202,39 @@ model TipoPergunta {
 }
 
 model Pergunta {
-  id                Int                 @id @default(autoincrement())
-  descricao         String
-  numero            String              @db.VarChar(5)
-  numeroComplemento String?             @db.VarChar(5)
-  ordem             Int
-  tipoPergunta      TipoPergunta        @relation(fields: [tipoPerguntaId], references: [id])
-  tipoPerguntaId    Int
-  timer             Int?
-  valorMinimo       Int?
-  valorMaximo       Int?
-  step              Int?
-  mascaraResposta   String?             @db.VarChar(30)
-  bloco             Int
-  identificador     String?             @db.VarChar(6)
-  descricaoAuxiliar String?
-  formulario        Formulario          @relation(fields: [formularioId], references: [id])
-  formularioId      Int
-  respostaAluno     RespostaAluno[]
-  alternativa       Alternativa[]
-  escutar           Escutar[]
-  RespostaProfessor RespostaProfessor[]
+  id                 Int                  @id @default(autoincrement())
+  descricao          String
+  numero             String               @db.VarChar(5)
+  numeroComplemento  String?              @db.VarChar(5)
+  ordem              Int
+  tipoPergunta       TipoPergunta         @relation(fields: [tipoPerguntaId], references: [id])
+  tipoPerguntaId     Int
+  timer              Int?
+  valorMinimo        Int?
+  valorMaximo        Int?
+  step               Int?
+  mascaraResposta    String?              @db.VarChar(30)
+  bloco              Int
+  identificador      String?              @db.VarChar(6)
+  descricaoAuxiliar  String?
+  grupo              String?              @db.VarChar(2)
+  variacao           Int?
+  formulario         Formulario           @relation(fields: [formularioId], references: [id])
+  formularioId       Int
+  respostaAluno      RespostaAluno[]
+  alternativa        Alternativa[]
+  escutar            Escutar[]
+  RespostaProfessor  RespostaProfessor[]
+  PerguntaGrupoAluno PerguntaGrupoAluno[]
+}
+
+model PerguntaGrupoAluno {
+  aluno      Aluno    @relation(fields: [alunoId], references: [id])
+  pergunta   Pergunta @relation(fields: [perguntaId], references: [id])
+  alunoId    Int
+  perguntaId Int
+
+  @@id([alunoId, perguntaId])
 }
 
 model Escutar {

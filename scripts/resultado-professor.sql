@@ -78,7 +78,6 @@ and pro.id in (
 	where fp.situacao=3
 	and m.estadoId = @estadoId
 	and fp.formularioId = @formularioId
-
 )
 --select * from #tempResp where numeropergunta='05'
 
@@ -99,6 +98,7 @@ CROSS APPLY STRING_SPLIT(R.descricao, ',') AS SplitDesc
 JOIN Alternativa A ON SplitDesc.value = CAST(a.id AS NVARCHAR(MAX))
 where r.tipoPerguntaId = 2
 GROUP BY R.professorId, R.perguntaId
+order by numeros_alternativas
 
 update r
 set r.resposta = rp.numeros_alternativas
