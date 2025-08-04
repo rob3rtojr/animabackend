@@ -31,8 +31,6 @@ export async function formulario(app: FastifyInstance) {
       })
     }
 
-    console.log(situacaoFormulario)
-
     if (situacaoFormulario?.situacao === 3) {
       return res.status(401).send([])
     }
@@ -56,6 +54,7 @@ export async function formulario(app: FastifyInstance) {
           select: {
             id: true,
             descricao: true,
+            checkRespostaUnica: true,
           },
         },
         escutar: {
@@ -66,8 +65,6 @@ export async function formulario(app: FastifyInstance) {
         },
       },
     })
-
-    console.log(id)
 
     const perguntasGrupo = await prisma.perguntaGrupoAluno.findMany({
       where: {
@@ -101,6 +98,7 @@ export async function formulario(app: FastifyInstance) {
           select: {
             id: true,
             descricao: true,
+            checkRespostaUnica: true,
           },
         },
         escutar: {

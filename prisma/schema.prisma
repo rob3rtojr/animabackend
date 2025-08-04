@@ -248,12 +248,13 @@ model Escutar {
 }
 
 model Alternativa {
-  id         Int      @id @default(autoincrement())
-  descricao  String
-  numero     String   @db.VarChar(5)
-  ordem      Int
-  pergunta   Pergunta @relation(fields: [perguntaId], references: [id])
-  perguntaId Int
+  id                 Int      @id @default(autoincrement())
+  descricao          String
+  numero             String   @db.VarChar(5)
+  ordem              Int
+  checkRespostaUnica String?  @db.Char(1)
+  pergunta           Pergunta @relation(fields: [perguntaId], references: [id])
+  perguntaId         Int
 }
 
 model RespostaAluno {
