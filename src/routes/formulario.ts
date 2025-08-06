@@ -55,6 +55,7 @@ export async function formulario(app: FastifyInstance) {
             id: true,
             descricao: true,
             checkRespostaUnica: true,
+            itemAleatorio: true,
           },
         },
         escutar: {
@@ -99,6 +100,7 @@ export async function formulario(app: FastifyInstance) {
             id: true,
             descricao: true,
             checkRespostaUnica: true,
+            itemAleatorio: true,
           },
         },
         escutar: {

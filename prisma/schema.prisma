@@ -202,30 +202,31 @@ model TipoPergunta {
 }
 
 model Pergunta {
-  id                 Int                  @id @default(autoincrement())
-  descricao          String
-  numero             String               @db.VarChar(5)
-  numeroComplemento  String?              @db.VarChar(5)
-  ordem              Int
-  tipoPergunta       TipoPergunta         @relation(fields: [tipoPerguntaId], references: [id])
-  tipoPerguntaId     Int
-  timer              Int?
-  valorMinimo        Int?
-  valorMaximo        Int?
-  step               Int?
-  mascaraResposta    String?              @db.VarChar(30)
-  bloco              Int
-  identificador      String?              @db.VarChar(6)
-  descricaoAuxiliar  String?
-  grupo              String?              @db.VarChar(2)
-  variacao           Int?
-  formulario         Formulario           @relation(fields: [formularioId], references: [id])
-  formularioId       Int
-  respostaAluno      RespostaAluno[]
-  alternativa        Alternativa[]
-  escutar            Escutar[]
-  RespostaProfessor  RespostaProfessor[]
-  PerguntaGrupoAluno PerguntaGrupoAluno[]
+  id                      Int                  @id @default(autoincrement())
+  descricao               String
+  numero                  String               @db.VarChar(5)
+  numeroComplemento       String?              @db.VarChar(5)
+  ordem                   Int
+  tipoPergunta            TipoPergunta         @relation(fields: [tipoPerguntaId], references: [id])
+  tipoPerguntaId          Int
+  timer                   Int?
+  valorMinimo             Int?
+  valorMaximo             Int?
+  step                    Int?
+  mascaraResposta         String?              @db.VarChar(30)
+  bloco                   Int
+  identificador           String?              @db.VarChar(6)
+  descricaoAuxiliar       String?
+  grupo                   String?              @db.VarChar(2)
+  variacao                Int?
+  aleatorizarAlternativas String?              @db.Char(1)
+  formulario              Formulario           @relation(fields: [formularioId], references: [id])
+  formularioId            Int
+  respostaAluno           RespostaAluno[]
+  alternativa             Alternativa[]
+  escutar                 Escutar[]
+  RespostaProfessor       RespostaProfessor[]
+  PerguntaGrupoAluno      PerguntaGrupoAluno[]
 }
 
 model PerguntaGrupoAluno {
@@ -253,6 +254,7 @@ model Alternativa {
   numero             String   @db.VarChar(5)
   ordem              Int
   checkRespostaUnica String?  @db.Char(1)
+  itemAleatorio      String?  @db.Char(1)
   pergunta           Pergunta @relation(fields: [perguntaId], references: [id])
   perguntaId         Int
 }
