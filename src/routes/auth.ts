@@ -107,17 +107,47 @@ export async function authRotes(app: FastifyInstance) {
           : ''
       }
     } else {
+      // const userProfessor = await prisma.professor.findUnique({
+      //   where: {
+      //     id,
+      //   },
+      //   include: {
+      //     municipio: {
+      //       include: {
+      //         estado: {
+      //           select: {
+      //             id: true,
+      //             sigla: true,
+      //           },
+      //         },
+      //       },
+      //     },
+      //   },
+      // })
+
       const userProfessor = await prisma.professor.findUnique({
         where: {
-          id,
+          id: Number(id),
         },
         include: {
-          municipio: {
+          ProfessorEscola: {
+            take: 1, // traz só o primeiro vínculo
+            orderBy: {
+              professorId: 'asc', // define a ordem para escolher o "primeiro"
+            },
             include: {
-              estado: {
-                select: {
-                  id: true,
-                  sigla: true,
+              escola: {
+                include: {
+                  municipio: {
+                    include: {
+                      estado: {
+                        select: {
+                          id: true,
+                          sigla: true,
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
