@@ -13,16 +13,46 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
     const { professorId } = paramSchema.parse(request.params)
     const dataAtual = new Date()
 
+    // const estadoProfessor = await prisma.professor.findUnique({
+    //   where: { id: professorId },
+    //   select: {
+    //     municipio: {
+    //       select: {
+    //         estado: {
+    //           select: {
+    //             id: true,
+    //             nome: true,
+    //             sigla: true,
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // })
+
     const estadoProfessor = await prisma.professor.findUnique({
-      where: { id: professorId },
-      select: {
-        municipio: {
-          select: {
-            estado: {
-              select: {
-                id: true,
-                nome: true,
-                sigla: true,
+      where: {
+        id: professorId,
+      },
+      include: {
+        ProfessorEscola: {
+          take: 1, // traz só o primeiro vínculo
+          orderBy: {
+            professorId: 'asc', // define a ordem para escolher o "primeiro"
+          },
+          include: {
+            escola: {
+              include: {
+                municipio: {
+                  include: {
+                    estado: {
+                      select: {
+                        id: true,
+                        sigla: true,
+                      },
+                    },
+                  },
+                },
               },
             },
           },
@@ -53,7 +83,8 @@ export async function listaFormulariosProfessor(app: FastifyInstance) {
         const periodoExiste = await prisma.periodoPreenchimento.findFirst({
           where: {
             formularioId: form.formulario.id,
-            estadoId: estadoProfessor?.municipio.estado.id,
+            estadoId:
+              estadoProfessor?.ProfessorEscola[0]?.escola.municipio.estado.id,
             dataFinal: {
               gt: dataAtual, // dataFinal > data atual
             },
