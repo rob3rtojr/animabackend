@@ -51,26 +51,42 @@ export async function municipioPorEstadoRoutes(app: FastifyInstance) {
         },
       })
     } else if (tipo === 'professor') {
-      municipioPorEstado = await prisma.municipio.findMany({
-        orderBy: [
-          {
-            nome: 'asc',
-          },
-        ],
-        where: {
-          estado: {
-            id: estadoId,
-            situacao: 'A',
-          },
+      // municipioPorEstado = await prisma.municipio.findMany({
+      //   orderBy: [
+      //     {
+      //       nome: 'asc',
+      //     },
+      //   ],
+      //   where: {
+      //     estado: {
+      //       id: estadoId,
+      //       situacao: 'A',
+      //     },
 
-          Professor: {
-            some: {},
+      //     Professor: {
+      //       some: {},
+      //     },
+      //   },
+      //   select: {
+      //     id: true,
+      //     nome: true,
+      //   },
+      // })
+
+      municipioPorEstado = prisma.municipio.findMany({
+        where: {
+          estadoId,
+          Escola: {
+            some: {
+              ProfessorEscola: { some: {} },
+            },
           },
         },
         select: {
           id: true,
           nome: true,
         },
+        orderBy: { nome: 'asc' },
       })
     } else {
       console.log('sem filtro')

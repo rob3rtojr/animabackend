@@ -11,20 +11,37 @@ export async function professorRoutes(app: FastifyInstance) {
 
     const { municipioId } = paramsSchema.parse(request.params)
 
+    // const professor = await prisma.professor.findMany({
+    //   orderBy: [
+    //     {
+    //       nome: 'asc',
+    //     },
+    //   ],
+    //   where: {
+    //     municipioId,
+    //     possuiFormulario: '1',
+    //   },
+    //   select: {
+    //     id: true,
+    //     nome: true,
+    //   },
+    // })
+
     const professor = await prisma.professor.findMany({
-      orderBy: [
-        {
-          nome: 'asc',
-        },
-      ],
       where: {
-        municipioId,
-        possuiFormulario: '1',
+        ProfessorEscola: {
+          some: {
+            escola: {
+              municipioId,
+            },
+          },
+        },
       },
       select: {
         id: true,
         nome: true,
       },
+      orderBy: { nome: 'asc' },
     })
 
     const professoresAtualizados = atualizarNomes(professor)
