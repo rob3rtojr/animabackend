@@ -127,7 +127,7 @@ export async function authRotes(app: FastifyInstance) {
 
       const userProfessor = await prisma.professor.findUnique({
         where: {
-          id: Number(id),
+          id,
         },
         include: {
           ProfessorEscola: {
@@ -197,7 +197,10 @@ export async function authRotes(app: FastifyInstance) {
       if (userExists) {
         userName = userProfessor ? userProfessor.nome : ''
         userId = userProfessor ? userProfessor.id : 0
-        siglaEstado = userProfessor ? userProfessor.municipio.estado.sigla : ''
+        // siglaEstado = userProfessor ? userProfessor.municipio.estado.sigla : ''
+        siglaEstado =
+          userProfessor?.ProfessorEscola?.[0]?.escola?.municipio?.estado
+            ?.sigla || ''
       }
     }
 
