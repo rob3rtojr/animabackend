@@ -182,7 +182,13 @@ export async function formulario(app: FastifyInstance) {
       f.alternativa.forEach((a, indexAlternativa) => {
         let bolResposta = false
         if (respostaPergunta.length > 0) {
-          bolResposta = respostaPergunta.includes(a.id.toString())
+          // bolResposta = respostaPergunta.includes(a.id.toString())
+
+          bolResposta = respostaPergunta.some((item) => {
+            const partes = item.split('.')
+            const id = partes.length > 1 ? partes[1] : partes[0] // pega após | ou a própria string
+            return id === a.id.toString()
+          })
         }
         formularioComResposta[index].alternativa[indexAlternativa] = {
           ...alternativa[indexAlternativa],
