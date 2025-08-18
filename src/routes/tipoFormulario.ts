@@ -11,7 +11,9 @@ export async function tipoFormulario(app: FastifyInstance) {
   app.get('/tipoFormularios', async (request) => {
     const form = await prisma.formulario.findMany({
       where: {
-        id: 11, // Filtro para selecionar o formulário com id 11
+        id: {
+          in: [12, 13],
+        },
       },
       select: {
         id: true,
