@@ -81,11 +81,22 @@ export async function quantitativo(app: FastifyInstance) {
       if (turmaId) resultadoAtualizado = atualizarNomes(resultado)
     } else {
       resultado =
-        await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador},${grupo}, ${estrato}`
+        await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${
+          estadoId === undefined ? 0 : estadoId
+        },${regionalId === undefined ? 0 : regionalId},${
+          municipioId === undefined ? 0 : municipioId
+        },${agrupador === undefined ? 0 : agrupador}, ${grupo}, ${estrato}`
+
+      // await prisma.$queryRaw`exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador},${grupo}, ${estrato}`
       if (municipioId) resultadoAtualizado = atualizarNomes(resultado)
     }
+
     console.log(
-      `exec SP_RelatorioProfessor ${formularioId},${estadoId},${regionalId},${municipioId},${agrupador},${grupo}, ${estrato}`,
+      `exec SP_RelatorioProfessor ${formularioId},${
+        estadoId === undefined ? 0 : estadoId
+      },${regionalId === undefined ? 0 : regionalId},${
+        municipioId === undefined ? 0 : municipioId
+      },${agrupador === undefined ? 0 : agrupador}, ${grupo}, ${estrato}`,
     )
     return resultadoAtualizado || resultado
   })

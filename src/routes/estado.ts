@@ -78,23 +78,25 @@ export async function estadoRoutes(app: FastifyInstance) {
     } else {
       estado = await prisma.estado.findMany({
         where: {
-          // Regional: {
-          // some: {
           Municipio: {
             some: {
-              Professor: {
+              Escola: {
                 some: {
-                  formularios: {
+                  ProfessorEscola: {
                     some: {
-                      formularioId,
+                      professor: {
+                        formularios: {
+                          some: {
+                            formularioId, // parâmetro
+                          },
+                        },
+                      },
                     },
                   },
                 },
               },
             },
           },
-          // },
-          // },
         },
         distinct: ['id'],
         select: {
@@ -103,6 +105,34 @@ export async function estadoRoutes(app: FastifyInstance) {
           sigla: true,
         },
       })
+
+      // estado = await prisma.estado.findMany({
+      //   where: {
+      //     // Regional: {
+      //     // some: {
+      //     Municipio: {
+      //       some: {
+      //         Professor: {
+      //           some: {
+      //             formularios: {
+      //               some: {
+      //                 formularioId,
+      //               },
+      //             },
+      //           },
+      //         },
+      //       },
+      //     },
+      //     // },
+      //     // },
+      //   },
+      //   distinct: ['id'],
+      //   select: {
+      //     id: true,
+      //     nome: true,
+      //     sigla: true,
+      //   },
+      // })
     }
 
     return estado
