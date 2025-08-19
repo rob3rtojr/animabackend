@@ -12,7 +12,7 @@ export async function tipoFormulario(app: FastifyInstance) {
     const form = await prisma.formulario.findMany({
       where: {
         id: {
-          in: [12, 13],
+          in: [12, 13, 14, 15],
         },
       },
       select: {
