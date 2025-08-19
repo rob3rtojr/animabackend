@@ -24,7 +24,7 @@ export async function tipoFormulario(app: FastifyInstance) {
 
     const result: any[] = []
     form.forEach((f) => {
-      result.push({ id: f.id, nome: f.nome + ' - ' + f.tipo, tipo: f.tipo })
+      result.push({ id: f.id, nome: f.nome, tipo: f.tipo })
     })
 
     return result
@@ -60,7 +60,7 @@ export async function tipoFormulario(app: FastifyInstance) {
 
     const result: any[] = []
     form.forEach((f) => {
-      result.push({ id: f.id, nome: f.nome + ' - ' + f.tipo, tipo: f.tipo })
+      result.push({ id: f.id, nome: f.nome, tipo: f.tipo })
     })
 
     return result
